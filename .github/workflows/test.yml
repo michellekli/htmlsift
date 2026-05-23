@@ -1,0 +1,32 @@
+name: Run Tests
+
+on:
+  # Trigger on pushes to main/dev and PRs targeting them
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      UV_COMPILE_BYTECODE: "1"
+      UV_LINK_MODE: "copy"
+      UV_NO_DEV: "1"
+      UV_TOOL_BIN_DIR: "/usr/local/bin"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests and generate code coverage report
+        run: uv run pytest src/python/ --cov --cov-branch --cov-report=xml --doctest-modules
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

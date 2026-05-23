@@ -26,6 +26,7 @@ repos:
     rev: v1.20.1
     hooks:
     -   id: mypy
+        files: ^src/python/.*\.py$
         args: [--strict]
         additional_dependencies: []
 -   repo: local
@@ -35,6 +36,23 @@ repos:
         name: renv
         language: script
         entry: hooks/renv.sh
+        pass_filenames: false
+    # ensure R Shiny manifest is up-to-date
+    -   id: local-write-manifest
+        name: write-manifest
+        language: r
+        entry: Rscript hooks/write-manifest.R
+        pass_filenames: false
+    -   id: local-diff-manifest
+        name: diff-manifest
+        language: script
+        entry: hooks/diff-manifest.sh
+        pass_filenames: false
+    # unit test Python logic
+    -   id: local-unittest
+        name: unittest
+        language: python
+        entry: uv run python -m unittest
         pass_filenames: false
     # lints and styles
     -   id: local-lintr
