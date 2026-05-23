@@ -26,6 +26,7 @@ repos:
     rev: v1.20.1
     hooks:
     -   id: mypy
+        files: ^src/python/.*\.py$
         args: [--strict]
         additional_dependencies: []
 -   repo: local
