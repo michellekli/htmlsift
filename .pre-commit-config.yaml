@@ -37,6 +37,17 @@ repos:
         language: script
         entry: hooks/renv.sh
         pass_filenames: false
+    # ensure R Shiny manifest is up-to-date
+    -   id: local-write-manifest
+        name: write-manifest
+        language: r
+        entry: Rscript hooks/write-manifest.R
+        pass_filenames: false
+    -   id: local-diff-manifest
+        name: diff-manifest
+        language: script
+        entry: hooks/diff-manifest.sh
+        pass_filenames: false
     # unit test Python logic
     -   id: local-unittest
         name: unittest
