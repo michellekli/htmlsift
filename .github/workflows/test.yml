@@ -3,7 +3,7 @@ name: Run Tests
 on:
   # Trigger on pushes to main/dev and PRs targeting them
   push:
-    branches: [main, develop, 8-setup-cicd-with-github-actions]
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
   # Allow manual trigger from the Actions tab
