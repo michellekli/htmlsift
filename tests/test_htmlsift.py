@@ -1,4 +1,4 @@
-import src.python.hello
+import src.python.sanitizer
 import unittest
 import doctest
 
@@ -6,5 +6,5 @@ import doctest
 def load_tests(
     loader: unittest.TestLoader, tests: unittest.TestSuite, pattern: str
 ) -> unittest.TestSuite:
-    tests.addTests(doctest.DocTestSuite(src.python.hello))
+    tests.addTests(doctest.DocTestSuite(src.python.sanitizer))
     return tests
