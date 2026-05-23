@@ -41,4 +41,4 @@ repos:
         name: lintr
         language: r
         entry: Rscript hooks/lintr.R
-        files: src/shiny/
+        files: ^src/shiny/.*\.R$
