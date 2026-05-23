@@ -37,6 +37,12 @@ repos:
         language: script
         entry: hooks/renv.sh
         pass_filenames: false
+    # unit test Python logic
+    -   id: local-unittest
+        name: unittest
+        language: python
+        entry: uv run python -m unittest
+        pass_filenames: false
     # lints and styles
     -   id: local-lintr
         name: lintr
