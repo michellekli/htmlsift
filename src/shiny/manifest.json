@@ -178,6 +178,41 @@
         "RemoteSha": "0.1-6"
       }
     },
+    "box": {
+      "Source": "CRAN",
+      "Repository": "https://cloud.r-project.org",
+      "description": {
+        "Package": "box",
+        "Title": "Write Reusable, Composable and Modular R Code",
+        "Version": "1.2.2",
+        "Authors@R": "c(\n        person(\n            'Konrad', 'Rudolph',\n            email = 'konrad.rudolph@gmail.com',\n            role = c('aut', 'cre'),\n            comment = c(ORCID = '0000-0002-9866-7051')\n        ),\n        person(\n            'Michael', 'Schubert',\n            email = 'mschu.dev@gmail.com',\n            role = 'ctb',\n            comment = c(ORCID = '0000-0002-6862-5221')\n        )\n    )",
+        "URL": "https://klmr.me/box/, https://github.com/klmr/box",
+        "BugReports": "https://github.com/klmr/box/issues",
+        "Description": "A modern module system for R. Organise code into hierarchical,\n    composable, reusable modules, and use it effortlessly across projects via a\n    flexible, declarative dependency loading syntax.",
+        "Depends": "R (>= 3.6.0)",
+        "Imports": "tools",
+        "License": "MIT + file LICENSE",
+        "Encoding": "UTF-8",
+        "Suggests": "devtools, knitr (>= 1.40), rmarkdown, R6, rlang, roxygen2 (>=\n7.2.1), shiny, stringr, testthat (>= 3.1.7)",
+        "Enhances": "rstudioapi",
+        "VignetteBuilder": "knitr",
+        "RoxygenNote": "7.3.3",
+        "NeedsCompilation": "yes",
+        "Packaged": "2026-04-08 18:29:47 UTC; konrad",
+        "Author": "Konrad Rudolph [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-9866-7051>),\n  Michael Schubert [ctb] (ORCID: <https://orcid.org/0000-0002-6862-5221>)",
+        "Maintainer": "Konrad Rudolph <konrad.rudolph@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-04-10 06:50:15 UTC",
+        "Built": "R 4.6.0; x86_64-pc-linux-gnu; 2026-05-23 18:11:55 UTC; unix",
+        "RemoteType": "standard",
+        "RemoteRef": "box",
+        "RemotePkgRef": "box",
+        "RemoteRepos": "https://cloud.r-project.org",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "source",
+        "RemoteSha": "1.2.2"
+      }
+    },
     "bslib": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -1315,7 +1350,13 @@
   },
   "files": {
     "app.R": {
-      "checksum": "77443294ae9948df47daaec770f12560"
+      "checksum": "a969da2bb70a108f9f032aa4a802e06d"
+    },
+    "components/htmlInput.R": {
+      "checksum": "0d530d6bbdc86d11eb432df02e911e0c"
+    },
+    "routes/home.R": {
+      "checksum": "c235fe68bd9c5a16ca51df0603b82918"
     }
   },
   "users": null
