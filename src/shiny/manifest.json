@@ -9,6 +9,15 @@
     "content_category": null,
     "has_parameters": false
   },
+  "python": {
+    "version": "3.13.13",
+    "requires": null,
+    "package_manager": {
+      "name": "pip",
+      "version": "26.1.1",
+      "package_file": "requirements.txt"
+    }
+  },
   "packages": {
     "Matrix": {
       "Source": "CRAN",
@@ -1350,10 +1359,13 @@
   },
   "files": {
     "app.R": {
-      "checksum": "a969da2bb70a108f9f032aa4a802e06d"
+      "checksum": "949b48b50864e8dc112a3ef178f167b8"
     },
     "components/htmlInput.R": {
       "checksum": "0d530d6bbdc86d11eb432df02e911e0c"
+    },
+    "requirements.txt": {
+      "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
       "checksum": "c235fe68bd9c5a16ca51df0603b82918"

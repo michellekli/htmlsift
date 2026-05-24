@@ -10,7 +10,7 @@ box::purge_cache()
 
 # Load function for running shiny app
 box::use(
-  shiny[shinyApp]
+  shiny[shinyApp],
 )
 
 # Load initial route
