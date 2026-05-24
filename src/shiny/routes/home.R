@@ -1,7 +1,6 @@
 box::use(
   bslib[...],
   shiny[...],
-  reticulate[import_from_path],
 )
 
 box::use(
@@ -9,14 +8,14 @@ box::use(
   ../components/pathList
 )
 
-parser <- import_from_path("parser", here::here("src", "python"))
+parser <- reticulate::import_from_path("parser", here::here("src", "python"))
 
 #' @export
 ui <- function() {
   page_sidebar(
     title = "htmlsift",
     sidebar = sidebar(
-      width = 400,
+      width = 300,
       htmlInput$ui("html_config")
     ),
     layout_columns(
@@ -26,7 +25,8 @@ ui <- function() {
         card_body(
           verbatimTextOutput("selected_output")
         )
-      )
+      ),
+      col_widths = c(4, 8)
     )
   )
 }
@@ -55,7 +55,7 @@ server <- function(input, output, session) {
   observeEvent(sanitized_html(), isolate({
     sanitized_html() |>
       parser$parse_html_to_tree() |>
-      parser$get_path_frequencies() |>
+      parser$get_path_stats() |>
       do.call(rbind, args = _) |> # turn list of lists into a matrix
       data.frame() |>
       parsed_paths()

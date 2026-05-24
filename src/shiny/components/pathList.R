@@ -30,27 +30,42 @@ server <- function(id, paths, selected_path) {
     observeEvent(paths(), isolate({
       req(paths())
 
-      df <- paths()
+      df <- paths()[, c("frequency", "path", "first_text")]
 
       # Render the data table with single-row selection
       output$dt <- DT::renderDataTable({
         DT::datatable(
           df,
-          colnames = c("Path", "Frequency"),
+          colnames = c("Frequency", "Path", "First Text"),
           selection = list(mode = "single", target = "row"),
           options = list(
-            scrollY = "400px",
+            fillContainer = TRUE,
             paging = FALSE,
-            searching = FALSE,
+            searching = TRUE,
             ordering = FALSE,
             info = FALSE,
             columnDefs = list(
-              list(className = "dt-left", targets = 0),
-              list(className = "dt-right", targets = 1)
+              list(className = "dt-right", targets = 0),
+              list(className = "dt-left", targets = 1),
+              list(className = "dt-left", targets = 2)
             )
           ),
           rownames = FALSE
-        )
+        ) |>
+          DT::formatStyle(
+            columns = c(1, 2),  # 1-based for formatStyle
+            `max-width` = "25px",
+            `white-space` = "nowrap",
+            `overflow` = "hidden",
+            `text-overflow` = "ellipsis"
+          ) |>
+          DT::formatStyle(
+            columns = c(3),  # 1-based for formatStyle
+            `max-width` = "150px",
+            `white-space` = "nowrap",
+            `overflow` = "hidden",
+            `text-overflow` = "ellipsis"
+          )
       })
     }))
 
