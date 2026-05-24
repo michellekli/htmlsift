@@ -10,7 +10,4 @@ if (file.exists(".env")) {
 }
 
 app_path <- Sys.getenv("SHINY_APP_PATH", unset = "src/shiny")
-# Use forceGeneratePythonEnvironment when Python dependencies are out-dated,
-# otherwise it will always change the checksum in manifest.json
-#rsconnect::writeManifest(appDir = app_path, forceGeneratePythonEnvironment = TRUE)
 rsconnect::writeManifest(appDir = app_path)

@@ -52,6 +52,20 @@ repos:
         language: script
         entry: hooks/diff-manifest.sh
         pass_filenames: false
+    # ensure requirements.txt is up-to-date
+    # use uv to write and not writeManifest because
+    # if using forceGeneratePythonEnvironment, the checksum
+    # in writeManifest will change and always fail the hook
+    -   id: local-write-requirements
+        name: write-requirements
+        language: system
+        entry: hooks/write-requirements.sh
+        pass_filenames: false
+    -   id: local-diff-requirements
+        name: diff-requirements
+        language: script
+        entry: hooks/diff-requirements.sh
+        pass_filenames: false
     # unit test Python logic
     -   id: local-unittest
         name: unittest
