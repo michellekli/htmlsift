@@ -78,8 +78,7 @@ def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
             links = node.xpath(".//a/@href")
             if node.tag == "a" and "href" in node.attrib:
                 href = node.attrib["href"]
-                if href not in links:
-                    links.append(href)
+                links.append(href)
             data[path] = {
                 "frequency": 0,
                 "first_text": raw[:100] if raw else None,
