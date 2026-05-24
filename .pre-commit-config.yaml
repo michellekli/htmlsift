@@ -28,7 +28,11 @@ repos:
     -   id: mypy
         files: ^src/python/.*\.py$
         args: [--strict]
-        additional_dependencies: []
+        additional_dependencies: [
+            nh3>=0.3.5,
+            lxml>=6.1.1,
+            types-lxml>=2026.2.16,
+        ]
 -   repo: local
     hooks:
     # ensure lockfile is up-to-date

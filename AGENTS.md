@@ -1,1 +1,1 @@
-Run unit tests for Python with "uv run python -m unittest"
+Run unit tests for Python with "make test"
