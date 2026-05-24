@@ -3,22 +3,30 @@ box::use(
   shiny[...],
 )
 
-box::use(../components/htmlInput)
+box::use(
+  ../components/htmlInput,
+  ../components/pathList
+)
+
+parser <- reticulate::import_from_path("parser", here::here("src", "python"))
 
 #' @export
 ui <- function() {
   page_sidebar(
     title = "htmlsift",
     sidebar = sidebar(
-      width = 400,
+      width = 300,
       htmlInput$ui("html_config")
     ),
-    card(
-      card_header("Output Preview"),
-      card_body(
-        h4("Sanitized HTML will appear here after processing"),
-        verbatimTextOutput("html_output")
-      )
+    layout_columns(
+      pathList$ui("path_list"),
+      card(
+        card_header("Selected Path"),
+        card_body(
+          verbatimTextOutput("selected_output")
+        )
+      ),
+      col_widths = c(4, 8)
     )
   )
 }
@@ -31,22 +39,39 @@ server <- function(input, output, session) {
   # -----------------------
   # Init state
   sanitized_html <- reactiveVal(NULL)
+  parsed_paths <- reactiveVal(NULL)
+  selected_path <- reactiveVal(NULL)
 
   # Pass state for communication
   htmlInput$server("html_config", sanitized_html)
+  pathList$server("path_list",
+                  paths = parsed_paths,
+                  selected_path = selected_path)
 
   # ----------------------
   # --- EVENT HANDLING ---
   # ----------------------
   # Handle change in stored HTML
   observeEvent(sanitized_html(), isolate({
-    output$html_output <- renderPrint({
-      html <- sanitized_html()
-      if (is.null(html)) {
-        "No HTML processed yet. Provide HTML and click 'Process HTML'."
+    sanitized_html() |>
+      parser$parse_html_to_tree() |>
+      parser$get_path_stats() |>
+      do.call(rbind, args = _) |> # turn list of lists into a matrix
+      data.frame() |>
+      parsed_paths()
+  }))
+
+  # Handle change in selected path
+  observeEvent(selected_path(), isolate({
+    # Display selected path for demonstration
+    output$selected_output <- renderPrint({
+      if (is.null(selected_path())) {
+        "No path selected"
       } else {
-        cat(html)
+        cat("Selected path:\n")
+        cat(selected_path())
       }
     })
   }))
+
 }
