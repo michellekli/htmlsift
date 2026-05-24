@@ -9,7 +9,7 @@ iniconfig==2.3.0
 lxml==6.1.1
 nh3==0.3.5
 nodeenv==1.10.0
-packaging==26.
+packaging==26.2
 platformdirs==4.9.6
 pluggy==1.6.0
 pre_commit==4.6.0
