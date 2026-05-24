@@ -8,6 +8,11 @@
       }
     ]
   },
+  "Python": {
+    "Version": "3.13.13",
+    "Type": "virtualenv",
+    "Name": ".venv"
+  },
   "Packages": {
     "Matrix": {
       "Package": "Matrix",
