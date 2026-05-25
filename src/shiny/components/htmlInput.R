@@ -22,18 +22,24 @@ ui <- function(id) {
   card(
     card_header("Config"),
     card_body(
-      textAreaInput(
-        inputId = ns("html_input"),
-        label = "Paste your HTML below:",
-        placeholder = "HTML here...",
-        rows = 12,
-        width = "100%"
+      tooltip(
+        textAreaInput(
+          inputId = ns("html_input"),
+          label = "Paste your HTML below:",
+          placeholder = "HTML here...",
+          rows = 12,
+          width = "100%"
+        ),
+        "Paste raw HTML to parse. Will be sanitized to remove unsafe content."
       ),
-      actionButton(
-        inputId = ns("process_html"),
-        label = "Process HTML",
-        icon = icon("play"),
-        class = "btn-primary w-100 mt-2"
+      tooltip(
+        actionButton(
+          inputId = ns("process_html"),
+          label = "Process HTML",
+          icon = icon("play"),
+          class = "btn-primary w-100 mt-2"
+        ),
+        "Sanitize and parse the HTML to extract content paths."
       ),
       # Display validation/status messages
       uiOutput(ns("status_message"))
