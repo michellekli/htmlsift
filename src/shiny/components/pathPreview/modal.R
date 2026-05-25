@@ -6,12 +6,13 @@ box::use(
 )
 
 box::use(
+  ../../config[import_python],
   ./pathDisplay,
   ./previewAccordion
 )
 
 parser <- tryCatch(
-  reticulate::import_from_path("parser", here::here("src", "python")),
+  import_python("parser"),
   error = function(e) {
     stop("Unable to import Python parser module: ", e$message)
   }

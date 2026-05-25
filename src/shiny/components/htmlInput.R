@@ -3,11 +3,14 @@
 box::use(
   bslib[...],
   shiny[...],
-  reticulate[import_from_path],
+)
+
+box::use(
+  ../config[import_python],
 )
 
 sanitizer <- tryCatch(
-  import_from_path("sanitizer", here::here("src", "python")),
+  import_python("sanitizer"),
   error = function(e) {
     stop("Unable to import Python sanitizer module: ", e$message)
   }
