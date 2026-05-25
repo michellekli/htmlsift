@@ -3,6 +3,10 @@ box::use(
   shiny[...],
 )
 
+#' Path list module UI
+#'
+#' @param id Module namespace identifier.
+#' @return A card containing a DT data table for path selection.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -15,6 +19,13 @@ ui <- function(id) {
   )
 }
 
+#' Path list module server
+#'
+#' Renders a data table of parsed paths and handles row selection.
+#'
+#' @param id Module namespace identifier.
+#' @param paths A reactive data frame path details.
+#' @param selected_path A reactiveVal to store the selected path string.
 #' @export
 server <- function(id, paths, selected_path) {
   moduleServer(id, function(input, output, session) {

@@ -16,6 +16,9 @@ parser <- tryCatch(
   }
 )
 
+#' Main application UI
+#'
+#' @return A `page_sidebar()` layout with HTML input sidebar and path list.
 #' @export
 ui <- function() {
   page_sidebar(
@@ -38,6 +41,14 @@ ui <- function() {
 }
 
 
+#' Main application server
+#'
+#' Coordinates reactive state across modules for HTML parsing
+#' and path extraction.
+#'
+#' @param input Standard Shiny input object.
+#' @param output Standard Shiny output object.
+#' @param session Standard Shiny session object.
 #' @export
 server <- function(input, output, session) {
   # -----------------------

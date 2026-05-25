@@ -9,12 +9,22 @@ box::use(
   ./linksTable
 )
 
+#' Preview accordion module UI
+#'
+#' @param id Module namespace identifier.
+#' @return A uiOutput placeholder for the dynamically rendered accordion.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
   uiOutput(ns("accordion_container"))
 }
 
+#' Preview accordion module server
+#'
+#' Builds accordion panels from preview data, each with text and links table.
+#'
+#' @param id Module namespace identifier.
+#' @param preview_data A reactive list of preview items.
 #' @export
 server <- function(id, preview_data) {
   moduleServer(id, function(input, output, session) {
