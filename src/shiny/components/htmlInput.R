@@ -57,31 +57,37 @@ server <- function(id, sanitized_html) {
       raw_html <- input$html_input
 
       # Sanitize and validate the HTML input
-      result <- tryCatch({
-        # Sanitize
-        cleaned <- sanitizer$sanitize_html(raw_html)
+      result <- withProgress(
+        message = "Processing HTML...",
+        value = 0.5,
+        {
+          tryCatch({
+            # Sanitize
+            cleaned <- sanitizer$sanitize_html(raw_html)
 
-        # Validation: Check if input is not empty or just whitespace
-        validate(
-          need(cleaned != "", "Please enter HTML content."),
-          need(nchar(trimws(cleaned)) > 0,
-               "HTML content cannot be empty or whitespace only.")
-        )
+            # Validation: Check if input is not empty or just whitespace
+            validate(
+              need(cleaned != "", "Please enter HTML content."),
+              need(nchar(trimws(cleaned)) > 0,
+                   "HTML content cannot be empty or whitespace only.")
+            )
 
-        # Set state of input HTML
-        sanitized_html(cleaned)
+            # Set state of input HTML
+            sanitized_html(cleaned)
 
-        # Success message
-        list(
-          status = "success",
-          message = "HTML received!"
-        )
-      }, error = function(e) {
-        list(
-          status = "error",
-          message = e$message
-        )
-      })
+            # Success message
+            list(
+              status = "success",
+              message = "HTML received!"
+            )
+          }, error = function(e) {
+            list(
+              status = "error",
+              message = e$message
+            )
+          })
+        }
+      )
 
       # Set state of status
       process_html_status(result)
@@ -96,6 +102,12 @@ server <- function(id, sanitized_html) {
         if (is.null(result)) {
           # Clear message initially
           NULL
+        } else if (result$status == "loading") {
+          div(
+            class = "alert alert-info mt-3",
+            icon("spinner", class = "fa-spin"),
+            tags$strong(" Processing: "), result$message
+          )
         } else if (result$status == "success") {
           div(
             class = "alert alert-success mt-3",

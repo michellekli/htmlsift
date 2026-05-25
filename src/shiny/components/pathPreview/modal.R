@@ -70,18 +70,24 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
       path <- selected_path()
       root <- parsed_tree_root()
 
-      tryCatch({
-        # Update state with preview data for selected_path
-        preview_data(parser$get_content_for_path(root,
-                                                 path,
-                                                 limit = as.integer(3)))
-      }, error = function(e) {
-        showNotification(
-          paste("Unable to get content for preview:", e$message),
-          type = "error"
-        )
-        preview_data(NULL)
-      })
+      withProgress(
+        message = "Loading preview...",
+        value = 0.5,
+        {
+          tryCatch({
+            # Update state with preview data for selected_path
+            preview_data(parser$get_content_for_path(root,
+                                                     path,
+                                                     limit = as.integer(3)))
+          }, error = function(e) {
+            showNotification(
+              paste("Unable to get content for preview:", e$message),
+              type = "error"
+            )
+            preview_data(NULL)
+          })
+        }
+      )
     }))
 
     # Handle Confirm button click
