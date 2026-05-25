@@ -123,12 +123,10 @@ server <- function(input, output, session) {
   })
 
   # Handle change in extraction_path
-  observeEvent(extraction_path(), {
-    # Display extraction path for demonstration
-    output$selected_output <- renderPrint({
-      validate(need(extraction_path(), "No path selected for extraction"))
-      cat("Extraction path:\n")
-      cat(extraction_path())
-    })
-  })
+  # Display extraction path for demonstration
+  output$selected_output <- renderPrint({
+    validate(need(extraction_path(), "No path selected for extraction"))
+    cat("Extraction path:\n")
+    cat(extraction_path())
+  }) |> bindEvent(extraction_path())
 }

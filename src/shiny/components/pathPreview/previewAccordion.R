@@ -57,59 +57,57 @@ server <- function(id, preview_data) {
     # ----------------------
 
     # Handle change in preview_data
-    observeEvent(preview_data(), {
+    # Create accordion for each item in preview_data
+    output$accordion_container <- renderUI({
       data <- preview_data()
       req(length(data) > 0)
 
-      # Create accordion for each item in preview_data
-      output$accordion_container <- renderUI({
-        module_detail <- lapply(seq_along(data), function(i) {
-          list(
-            id = paste0("links_", i), # unique module ID
-            links = data[[i]]$links   # links for module
-          )
-        })
-        # Update state with details for each module
-        links_modules(module_detail)
+      module_detail <- lapply(seq_along(data), function(i) {
+        list(
+          id = paste0("links_", i), # unique module ID
+          links = data[[i]]$links   # links for module
+        )
+      })
+      # Update state with details for each module
+      links_modules(module_detail)
 
-        # Create accordion panels for each preview item
-        panels <- lapply(seq_along(data), function(i) {
-          item <- data[[i]]
-          validate(
-            need(is.list(item), paste("Preview item", i, "is not a list."))
-          )
-          module_id <- links_modules()[[i]]$id
+      # Create accordion panels for each preview item
+      panels <- lapply(seq_along(data), function(i) {
+        item <- data[[i]]
+        validate(
+          need(is.list(item), paste("Preview item", i, "is not a list."))
+        )
+        module_id <- links_modules()[[i]]$id
 
-          # Create links table UI for item
-          links_ui <- linksTable$ui(ns(module_id))
+        # Create links table UI for item
+        links_ui <- linksTable$ui(ns(module_id))
 
-          # Create text preview div
-          text_ui <- div(style = "
+        # Create text preview div
+        text_ui <- div(style = "
                          max-height: 200px;
                          overflow-y: auto;
                          border: 1px solid #ddd;
                          padding: 8px;
                          margin-top: 10px;",
-                         item$text)
+                       item$text)
 
-          # Create accordion panel
-          accordion_panel(title = paste("Item", i),
-                          div(
-                            em("Text Content:"),
-                            text_ui,
-                            hr(),
-                            em("Links:"),
-                            links_ui
-                          ),
-                          icon = bsicons::bs_icon("card-text"))
-        })
-
-        # Return accordion container with all accordion panels
-        do.call(accordion, c(list(
-          id = ns("accordion_widget"), open = TRUE
-        ), panels))
+        # Create accordion panel
+        accordion_panel(title = paste("Item", i),
+                        div(
+                          em("Text Content:"),
+                          text_ui,
+                          hr(),
+                          em("Links:"),
+                          links_ui
+                        ),
+                        icon = bsicons::bs_icon("card-text"))
       })
-    })
+
+      # Return accordion container with all accordion panels
+      do.call(accordion, c(list(
+        id = ns("accordion_widget"), open = TRUE
+      ), panels))
+    }) |> bindEvent(preview_data())
 
     # Initialize servers for the links UI.
     # No way to manually clean up server modules, so make sure

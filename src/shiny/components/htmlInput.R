@@ -118,34 +118,32 @@ server <- function(id, sanitized_html) {
     })
 
     # Handle processing status change
-    observeEvent(process_html_status(), {
+    # Show status message
+    output$status_message <- renderUI({
       result <- process_html_status()
 
-      # Set state of status message
-      output$status_message <- renderUI({
-        if (is.null(result)) {
-          # Clear message initially
-          NULL
-        } else if (result$status == "loading") {
-          div(
-            class = "alert alert-info mt-3",
-            icon("spinner", class = "fa-spin"),
-            tags$strong(" Processing: "), result$message
-          )
-        } else if (result$status == "success") {
-          div(
-            class = "alert alert-success mt-3",
-            icon("check-circle"),
-            tags$strong(" Success: "), result$message
-          )
-        } else {
-          div(
-            class = "alert alert-danger mt-3",
-            icon("exclamation-triangle"),
-            tags$strong(" Unable to process: "), result$message
-          )
-        }
-      })
-    })
+      if (is.null(result)) {
+        # Clear message initially
+        NULL
+      } else if (result$status == "loading") {
+        div(
+          class = "alert alert-info mt-3",
+          icon("spinner", class = "fa-spin"),
+          tags$strong(" Processing: "), result$message
+        )
+      } else if (result$status == "success") {
+        div(
+          class = "alert alert-success mt-3",
+          icon("check-circle"),
+          tags$strong(" Success: "), result$message
+        )
+      } else {
+        div(
+          class = "alert alert-danger mt-3",
+          icon("exclamation-triangle"),
+          tags$strong(" Unable to process: "), result$message
+        )
+      }
+    }) |> bindEvent(process_html_status())
   })
 }
