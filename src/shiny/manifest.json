@@ -1791,10 +1791,10 @@
       "checksum": "d04a012dce7bf3889b9f78fc2421f7f3"
     },
     "components/pathPreview/pathDisplay.R": {
-      "checksum": "b8226cdd415f0e9b41947e2a8e2e704b"
+      "checksum": "d56cedd4c4ef54903b321c1bdd70ca16"
     },
     "components/pathPreview/previewAccordion.R": {
-      "checksum": "e6b1e5ab9bdf88206bd7cad93c62e9d3"
+      "checksum": "c50a44c4443c8124811de2833b595503"
     },
     "requirements.txt": {
       "checksum": "c7c7f803f0d19352c5d839e223835618"
