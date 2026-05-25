@@ -1,3 +1,5 @@
+# HTML input module: provides text area, sanitization, and validation
+
 box::use(
   bslib[...],
   shiny[...],
@@ -57,9 +59,9 @@ ui <- function(id) {
 #' @export
 server <- function(id, sanitized_html) {
   moduleServer(id, function(input, output, session) {
-    # -----------------------
-    # --- REACTIVE STATE ----
-    # -----------------------
+    # ----------------------
+    # --- REACTIVE STATE ---
+    # ----------------------
     # Init state
     process_html_status <- reactiveVal(NULL)
 

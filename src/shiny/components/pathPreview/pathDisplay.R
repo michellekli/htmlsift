@@ -35,6 +35,8 @@ server <- function(id, selected_path) {
     # --- REACTIVE STATE ---
     # ----------------------
 
+    # No state
+
     # ----------------------
     # --- EVENT HANDLING ---
     # ----------------------

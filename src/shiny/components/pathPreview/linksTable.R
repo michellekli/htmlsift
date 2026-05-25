@@ -30,6 +30,8 @@ server <- function(id, links_reactive) {
     # --- REACTIVE STATE ---
     # ----------------------
 
+    # No state
+
     # ----------------------
     # --- EVENT HANDLING ---
     # ----------------------

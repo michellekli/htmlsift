@@ -1,3 +1,5 @@
+# Main application route: orchestrates reactive state across modules
+
 box::use(
   bslib[...],
   shiny[...],
@@ -51,9 +53,9 @@ ui <- function() {
 #' @param session Standard Shiny session object.
 #' @export
 server <- function(input, output, session) {
-  # -----------------------
-  # --- REACTIVE STATE ----
-  # -----------------------
+  # ----------------------
+  # --- REACTIVE STATE ---
+  # ----------------------
   # Init state
   sanitized_html <- reactiveVal(NULL)
   parsed_tree_root <- reactiveVal(NULL)

@@ -1,3 +1,5 @@
+# Path list module: renders parsed paths in a selectable widget
+
 box::use(
   bslib[...],
   shiny[...],
@@ -32,9 +34,9 @@ server <- function(id, paths, selected_path) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # -----------------------
-    # --- REACTIVE STATE ----
-    # -----------------------
+    # ----------------------
+    # --- REACTIVE STATE ---
+    # ----------------------
     # Init state
     # Create proxy to datatable for manipulation
     proxy <- DT::dataTableProxy(ns("dt"))

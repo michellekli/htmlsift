@@ -1,3 +1,5 @@
+# Preview modal module: shows extracted content preview with confirm/cancel
+
 box::use(
   bslib[...],
   shiny[...],
