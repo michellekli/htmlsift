@@ -15,6 +15,11 @@ parser <- tryCatch(
   }
 )
 
+#' Path preview modal UI
+#'
+#' @param id Module namespace identifier.
+#' @return A modal dialog with path display, preview accordion,
+#' and confirm/cancel buttons.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -41,6 +46,14 @@ ui <- function(id) {
   )
 }
 
+#' Path preview modal server
+#'
+#' Loads preview data for the selected path and manages confirm/cancel workflow.
+#'
+#' @param id Module namespace identifier.
+#' @param selected_path A reactiveVal with the currently selected path.
+#' @param parsed_tree_root A reactiveVal with the parsed HTML tree.
+#' @param extraction_path A reactiveVal to store the confirmed extraction path.
 #' @export
 server <- function(id, selected_path, parsed_tree_root, extraction_path) {
   moduleServer(id, function(input, output, session) {

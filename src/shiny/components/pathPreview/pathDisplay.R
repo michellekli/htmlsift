@@ -5,6 +5,10 @@ box::use(
   shiny[...],
 )
 
+#' Path display module UI
+#'
+#' @param id Module namespace identifier.
+#' @return A styled div showing the selected path text.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -16,6 +20,12 @@ ui <- function(id) {
   )
 }
 
+#' Path display module server
+#'
+#' Updates the displayed path text when selected_path changes.
+#'
+#' @param id Module namespace identifier.
+#' @param selected_path A reactiveVal containing the path string to display.
 #' @export
 server <- function(id, selected_path) {
   moduleServer(id, function(input, output, session) {

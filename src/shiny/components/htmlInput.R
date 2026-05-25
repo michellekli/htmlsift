@@ -11,6 +11,10 @@ sanitizer <- tryCatch(
   }
 )
 
+#' HTML input module UI
+#'
+#' @param id Module namespace identifier.
+#' @return A card with a text area, process button, and status message.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -37,6 +41,13 @@ ui <- function(id) {
   )
 }
 
+#' HTML input module server
+#'
+#' Sanitizes and validates user HTML input, updating the
+#' sanitized_html reactive.
+#'
+#' @param id Module namespace identifier.
+#' @param sanitized_html A reactiveVal to receive the sanitized HTML string.
 #' @export
 server <- function(id, sanitized_html) {
   moduleServer(id, function(input, output, session) {

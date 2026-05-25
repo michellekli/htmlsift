@@ -4,12 +4,22 @@ box::use(
   shiny[...],
 )
 
+#' Links table module UI
+#'
+#' @param id Module namespace identifier.
+#' @return A uiOutput placeholder for the links table or no-links message.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
   uiOutput(ns("links_container"))
 }
 
+#' Links table module server
+#'
+#' Renders a DT data table of links or a "No links found" placeholder.
+#'
+#' @param id Module namespace identifier.
+#' @param links_reactive A reactive vector or list of link hrefs.
 #' @export
 server <- function(id, links_reactive) {
   moduleServer(id, function(input, output, session) {
