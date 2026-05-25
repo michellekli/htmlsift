@@ -80,14 +80,14 @@ server <- function(id, paths, selected_path) {
         rownames = FALSE
       ) |>
         DT::formatStyle(
-          columns = c(1, 2),
+          columns = c("frequency", "path"),
           `max-width` = "25px",
           `white-space` = "nowrap",
           `overflow` = "hidden",
           `text-overflow` = "ellipsis"
         ) |>
         DT::formatStyle(
-          columns = c(3),
+          columns = c("first_text"),
           `max-width` = "150px",
           `white-space` = "nowrap",
           `overflow` = "hidden",
