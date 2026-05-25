@@ -11,7 +11,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, links) {
+server <- function(id, links_reactive) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -24,7 +24,9 @@ server <- function(id, links) {
     # ----------------------
 
     # Handle change in links
-    observeEvent(links, isolate({
+    observeEvent(links_reactive(), isolate({
+      links <- links_reactive()
+
       # Create container for links
       output$links_container <- renderUI({
         if (length(links) > 0) {
@@ -39,7 +41,8 @@ server <- function(id, links) {
 
       # Create links display
       output$links_dt <- DT::renderDT({
-        req(length(links) > 0)
+        req(length(links_reactive()) > 0)
+        links <- links_reactive()
 
         tryCatch({
           validate(

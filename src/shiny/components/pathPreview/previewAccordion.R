@@ -25,8 +25,14 @@ server <- function(id, preview_data) {
     # ----------------------
 
     # Init state
-    # Store module IDs for dynamically created linksTable modules
+    # Store module IDs and links for server modules
     links_modules <- reactiveVal(list())
+    # Store number of initialized server modules
+    n_servers <- reactiveVal(0)
+    # Calculate number of servers that need initializing
+    n_servers_to_init <- reactive({
+      length(links_modules()) - n_servers()
+    })
 
     # ----------------------
     # --- EVENT HANDLING ---
@@ -40,11 +46,14 @@ server <- function(id, preview_data) {
       tryCatch({
         # Create accordion for each item in preview_data
         output$accordion_container <- renderUI({
-          # Create unique module IDs for each item's links table
-          module_ids <- lapply(seq_along(data), function(i) {
-            paste0("links_", i)
+          module_detail <- lapply(seq_along(data), function(i) {
+            list(
+              id = paste0("links_", i), # unique module ID
+              links = data[[i]]$links   # links for module
+            )
           })
-          links_modules(module_ids)
+          # Update state with details for each module
+          links_modules(module_detail)
 
           # Create accordion panels for each preview item
           panels <- lapply(seq_along(data), function(i) {
@@ -52,11 +61,10 @@ server <- function(id, preview_data) {
             validate(
               need(is.list(item), paste("Preview item", i, "is not a list."))
             )
-            module_id <- module_ids[[i]]
+            module_id <- links_modules()[[i]]$id
 
-            # Create links table for item
+            # Create links table UI for item
             links_ui <- linksTable$ui(ns(module_id))
-            linksTable$server(module_id, item$links %||% list())
 
             # Create text preview div
             text_ui <- div(style = "
@@ -87,10 +95,30 @@ server <- function(id, preview_data) {
       }, error = function(e) {
         output$accordion_container <- renderUI({
           div(class = "alert alert-danger",
-              "Unable to load preview data.")
+              "Unable to display preview data.")
         })
       })
     }))
 
+    # Initialize servers for the links UI.
+    # No way to manually clean up server modules, so make sure
+    # to only initialize as many as are needed to support
+    # all the links UI.
+    # Must be outside renderUI for proper clean up
+    # when the entire UI for this module is removed.
+    observeEvent(n_servers_to_init(), isolate({
+      n <- n_servers_to_init()
+      req(n > 0)
+
+      lapply(c(1:n), function(i) {
+        linksTable$server(
+          links_modules()[[i]]$id,
+          reactive(links_modules()[[i]]$links) # can change, need reactive
+        )
+      })
+
+      # Update state to reflect newly initialized servers
+      n_servers(n_servers() + n)
+    }))
   })
 }
