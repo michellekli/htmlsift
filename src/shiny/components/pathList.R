@@ -36,6 +36,13 @@ server <- function(id, paths, selected_path) {
       req(paths())
 
       tryCatch({
+        validate(
+          need(
+            all(c("frequency", "path", "first_text") %in% colnames(paths())),
+            "Path data is missing expected columns:
+              (frequency, path, first_text)."
+          )
+        )
         df <- paths()[, c("frequency", "path", "first_text")]
 
         # Render the data table with single-row selection

@@ -105,13 +105,10 @@ server <- function(input, output, session) {
   observeEvent(extraction_path(), isolate({
     # Display extraction path for demonstration
     output$selected_output <- renderPrint({
+      validate(need(extraction_path(), "No path selected for extraction"))
       tryCatch({
-        if (is.null(extraction_path())) {
-          "No path selected for extraction"
-        } else {
-          cat("Extraction path:\n")
-          cat(extraction_path())
-        }
+        cat("Extraction path:\n")
+        cat(extraction_path())
       }, error = function(e) {
         paste("Unable to display extraction path:", e$message)
       })
