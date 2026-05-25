@@ -14,7 +14,10 @@ ui <- function(id) {
   card(
     card_header("Select a path"),
     card_body(
-      DT::dataTableOutput(ns("dt"))
+      tooltip(
+        DT::dataTableOutput(ns("dt")),
+        "Click a row to preview content at that path."
+      )
     )
   )
 }

@@ -36,8 +36,14 @@ ui <- function(id) {
         p("The first three items at this path are shown below."),
         div(
           class = "d-flex justify-content-end gap-2 mb-3",
-          actionButton(ns("cancel"), "Cancel"),
-          actionButton(ns("confirm"), "Extract", class = "btn-primary")
+          tooltip(
+            actionButton(ns("cancel"), "Cancel"),
+            "Cancel and return to path selection."
+          ),
+          tooltip(
+            actionButton(ns("confirm"), "Extract", class = "btn-primary"),
+            "Confirm extraction of content at the selected path."
+          )
         )
       ),
       pathDisplay$ui(ns("path_display")),
