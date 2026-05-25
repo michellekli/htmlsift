@@ -57,6 +57,13 @@ server <- function(id, sanitized_html) {
     # Init state
     process_html_status <- reactiveVal(NULL)
 
+    # Clean up reactive values when the session ends
+    session$onSessionEnded(function() {
+      process_html_status(NULL)
+
+      gc()
+    })
+
     # ----------------------
     # --- EVENT HANDLING ---
     # ----------------------

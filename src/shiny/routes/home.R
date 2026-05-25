@@ -61,6 +61,17 @@ server <- function(input, output, session) {
   selected_path <- reactiveVal(NULL)
   extraction_path <- reactiveVal(NULL)
 
+  # Clean up reactive values when the session ends
+  session$onSessionEnded(function() {
+    sanitized_html(NULL)
+    parsed_tree_root(NULL)
+    parsed_paths(NULL)
+    selected_path(NULL)
+    extraction_path(NULL)
+
+    gc()
+  })
+
   # Pass state for communication
   htmlInput$server("html_config", sanitized_html)
   pathList$server("path_list",
@@ -120,5 +131,4 @@ server <- function(input, output, session) {
       cat(extraction_path())
     })
   }))
-
 }
