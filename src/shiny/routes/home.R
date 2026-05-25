@@ -90,11 +90,11 @@ server <- function(input, output, session) {
   # ----------------------
   # Handle change in stored HTML
   observeEvent(sanitized_html(), {
-    withProgress(
-      message = "Parsing HTML...",
-      value = 0.5,
-      {
-        tryCatch({
+    tryCatch({
+      withProgress(
+        message = "Parsing HTML...",
+        value = 0.5,
+        {
           tree <- parser$parse_html_to_tree(sanitized_html())
 
           # Update state to store parsed tree object
@@ -106,15 +106,15 @@ server <- function(input, output, session) {
             do.call(rbind, args = _) |>
             data.frame() |>
             parsed_paths()
-        }, error = function(e) {
-          showNotification(
-            paste("Unable to parse HTML:", e$message),
-            type = "error",
-            duration = NULL
-          )
-        })
-      }
-    )
+        }
+      )
+    }, error = function(e) {
+      showNotification(
+        paste("Unable to parse HTML:", e$message),
+        type = "error",
+        duration = NULL
+      )
+    })
   })
 
   # Handle change in selected_path
