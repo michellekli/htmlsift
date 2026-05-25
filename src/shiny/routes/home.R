@@ -6,13 +6,14 @@ box::use(
 )
 
 box::use(
+  ../config[import_python],
   ../components/htmlInput,
   ../components/pathList,
   pathPreviewModal = ../components/pathPreview/modal
 )
 
 parser <- tryCatch(
-  reticulate::import_from_path("parser", here::here("src", "python")),
+  import_python("parser"),
   error = function(e) {
     stop("Unable to import Python parser module: ", e$message)
   }
