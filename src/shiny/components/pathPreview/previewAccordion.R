@@ -25,7 +25,7 @@ ui <- function(id) {
 #' Builds accordion panels from preview data, each with text and links table.
 #'
 #' @param id Module namespace identifier.
-#' @param preview_data A reactive list of preview items.
+#' @param preview_data A reactiveVal containing a list of preview items.
 #' @export
 server <- function(id, preview_data) {
   moduleServer(id, function(input, output, session) {

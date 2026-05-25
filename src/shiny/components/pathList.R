@@ -27,7 +27,7 @@ ui <- function(id) {
 #' Renders a data table of parsed paths and handles row selection.
 #'
 #' @param id Module namespace identifier.
-#' @param paths A reactive data frame path details.
+#' @param paths A reactiveVal containing a data frame of path details.
 #' @param selected_path A reactiveVal to store the selected path string.
 #' @export
 server <- function(id, paths, selected_path) {
