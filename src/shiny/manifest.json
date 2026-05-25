@@ -1788,7 +1788,7 @@
       "checksum": "621e2d615eadb660403b7acfeb3a687a"
     },
     "components/pathPreview/modal.R": {
-      "checksum": "b05bc31d668779aa6eff8488712aaa54"
+      "checksum": "f1130f4eeeceb42afe12b37b1baea106"
     },
     "components/pathPreview/pathDisplay.R": {
       "checksum": "cc5ff54f42eef4424e74345120270fde"
@@ -1803,7 +1803,7 @@
       "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
-      "checksum": "3a4faaa530464a67617a19c564607a72"
+      "checksum": "5ee6623951ea7d146db2bbd40bbd681b"
     }
   },
   "users": null
