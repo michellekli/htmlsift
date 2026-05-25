@@ -8,7 +8,7 @@ ui <- function(id) {
   ns <- NS(id)
 
   card(
-    card_header("Paths"),
+    card_header("Select a path"),
     card_body(
       DT::dataTableOutput(ns("dt"))
     )
@@ -18,9 +18,14 @@ ui <- function(id) {
 #' @export
 server <- function(id, paths, selected_path) {
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+
     # -----------------------
     # --- REACTIVE STATE ----
     # -----------------------
+    # Init state
+    # Create proxy to datatable for manipulation
+    proxy <- DT::dataTableProxy(ns("dt"))
 
     # ----------------------
     # --- EVENT HANDLING ---
@@ -36,14 +41,14 @@ server <- function(id, paths, selected_path) {
       output$dt <- DT::renderDataTable({
         DT::datatable(
           df,
-          colnames = c("Frequency", "Path", "First Text"),
+          colnames = c("Count", "Path", "First Text"),
           selection = list(mode = "single", target = "row"),
           options = list(
             fillContainer = TRUE,
             paging = FALSE,
             searching = TRUE,
             ordering = FALSE,
-            info = FALSE,
+            info = TRUE,
             columnDefs = list(
               list(className = "dt-right", targets = 0),
               list(className = "dt-left", targets = 1),
@@ -80,5 +85,19 @@ server <- function(id, paths, selected_path) {
       # Set state of selected_path
       selected_path(path_string)
     }))
+
+    # Handle selected_path being cleared
+    observeEvent(selected_path(), isolate({
+      path <- selected_path()
+
+      if (is.null(path)) {
+        # Clear selection from datatable display
+        DT::reloadData(
+          proxy,
+          resetPaging = FALSE,
+          clearSelection = "all"
+        )
+      }
+    }), ignoreNULL = FALSE)
   })
 }

@@ -15,8 +15,8 @@ ui <- function(id) {
     card_body(
       textAreaInput(
         inputId = ns("html_input"),
-        label = "Paste your HTML code below:",
-        placeholder = "Enter or paste HTML content here...",
+        label = "Paste your HTML below:",
+        placeholder = "HTML here...",
         rows = 12,
         width = "100%"
       ),
