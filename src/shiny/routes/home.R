@@ -91,14 +91,7 @@ server <- function(input, output, session) {
     path <- selected_path()
     req(!is.null(path), nchar(path) > 0)
 
-    tryCatch({
-      showModal(pathPreviewModal$ui("path_preview_modal"))
-    }, error = function(e) {
-      showNotification(
-        paste("Unable to show path preview:", e$message),
-        type = "error"
-      )
-    })
+    showModal(pathPreviewModal$ui("path_preview_modal"))
   }))
 
   # Handle change in extraction_path
@@ -106,12 +99,8 @@ server <- function(input, output, session) {
     # Display extraction path for demonstration
     output$selected_output <- renderPrint({
       validate(need(extraction_path(), "No path selected for extraction"))
-      tryCatch({
-        cat("Extraction path:\n")
-        cat(extraction_path())
-      }, error = function(e) {
-        paste("Unable to display extraction path:", e$message)
-      })
+      cat("Extraction path:\n")
+      cat(extraction_path())
     })
   }))
 

@@ -93,18 +93,11 @@ server <- function(id, paths, selected_path) {
       req(input$dt_rows_selected)
       req(paths())
 
-      tryCatch({
-        selected_row <- input$dt_rows_selected
-        path_string <- paths()[["path"]][[selected_row]]
+      selected_row <- input$dt_rows_selected
+      path_string <- paths()[["path"]][[selected_row]]
 
-        # Set state of selected_path
-        selected_path(path_string)
-      }, error = function(e) {
-        showNotification(
-          paste("Unable to select path:", e$message),
-          type = "error"
-        )
-      })
+      # Set state of selected_path
+      selected_path(path_string)
     }))
 
     # Handle selected_path being cleared
