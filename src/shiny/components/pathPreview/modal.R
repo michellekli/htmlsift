@@ -72,6 +72,11 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
     # Init state
     preview_data <- reactiveVal(NULL)
 
+    # Debounce
+    get_preview_data_d <- debounce(reactive({
+      c(selected_path(), parsed_tree_root())
+    }), 200)
+
     # Clean up reactive values when the session ends
     session$onSessionEnded(function() {
       preview_data(NULL)
@@ -89,9 +94,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
 
     # Handle change in selected_path or parsed_tree_root
     # Need both because of potential race condition
-    observeEvent(debounce(reactive({
-      c(selected_path(), parsed_tree_root())
-    }), 200)(), {
+    observeEvent(get_preview_data_d(), {
       req(selected_path(), parsed_tree_root())
       path <- selected_path()
       root <- parsed_tree_root()
