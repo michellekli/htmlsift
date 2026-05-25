@@ -8,6 +8,11 @@ class PathData(TypedDict):
     links: List[str]
 
 
+class PathElementDetails(TypedDict):
+    text: str
+    links: List[str]
+
+
 class PathFrequency(TypedDict):
     path: str
     frequency: int
@@ -74,11 +79,7 @@ def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
     def _traverse(node: html.HtmlElement, current_path: str) -> None:
         path = f"{current_path}/{str(node.tag)}" if current_path else str(node.tag)
         if path not in data:
-            raw = etree.tostring(node, method="text", encoding="unicode").strip()
-            links = node.xpath(".//a/@href")
-            if node.tag == "a" and "href" in node.attrib:
-                href = node.attrib["href"]
-                links.append(href)
+            raw, links = _extract_node_data(node)
             data[path] = {
                 "frequency": 0,
                 "first_text": raw[:100] if raw else None,
@@ -101,3 +102,66 @@ def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
     ]
     result.sort(key=lambda x: x["frequency"], reverse=True)
     return result
+
+
+def _extract_node_data(
+    node: html.HtmlElement,
+) -> tuple[str, list[str]]:
+    """
+    Extracts text content and hyperlink references from an HTML element.
+
+    >>> node = html.fromstring("<p>Hello</p>")
+    >>> _extract_node_data(node)
+    ('Hello', [])
+
+    >>> node2 = html.fromstring('<div>Text <a href="/link">here</a></div>')
+    >>> _extract_node_data(node2)
+    ('Text here', ['/link'])
+
+    >>> node3 = html.fromstring('<a href="/click">Click me</a>')
+    >>> _extract_node_data(node3)
+    ('Click me', ['/click'])
+
+    >>> node4 = html.fromstring("<div></div>")
+    >>> _extract_node_data(node4)
+    ('', [])
+    """
+    raw = etree.tostring(node, method="text", encoding="unicode").strip()
+    links: list[str] = node.xpath(".//a/@href")
+    if node.tag == "a" and "href" in node.attrib:
+        links.append(node.attrib["href"])
+    return raw, links
+
+
+def get_content_for_path(
+    root: html.HtmlElement, path: str, limit: int | None = None
+) -> List[PathElementDetails]:
+    """
+    Returns the complete text and links for the first `limit` items
+    at the specified PATH in ROOT.
+
+    >>> root = html.fromstring('<div><span>One <a href="/a">A</a></span><span>Two</span><span>Three</span></div>')
+    >>> details = get_content_for_path(root, 'div/span', limit=2)
+    >>> len(details)
+    2
+    >>> details[0]['text']
+    'One A'
+    >>> details[0]['links']
+    ['/a']
+    >>> details[1]['text']
+    'Two'
+    >>> details[1]['links']
+    []
+
+    >>> details_all = get_content_for_path(root, 'div/span', limit=None)
+    >>> len(details_all)
+    3
+    >>> details_all[2]['text']
+    'Three'
+    """
+    nodes = root.xpath(f"//{path}")
+    results = []
+    for node in nodes[:limit]:
+        raw, links = _extract_node_data(node)
+        results.append(PathElementDetails(text=raw, links=links))
+    return results

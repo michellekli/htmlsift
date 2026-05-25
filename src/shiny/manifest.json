@@ -256,6 +256,40 @@
         "RemoteSha": "1.2.2"
       }
     },
+    "bsicons": {
+      "Source": "CRAN",
+      "Repository": "https://cloud.r-project.org",
+      "description": {
+        "Package": "bsicons",
+        "Title": "Easily Work with 'Bootstrap' Icons",
+        "Version": "0.1.2",
+        "Authors@R": "c(\n    person(\"Carson\", \"Sievert\", , \"carson@posit.co\", role = c(\"cre\", \"aut\"),\n           comment = c(ORCID = \"0000-0002-4958-2844\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"Mark\", \"Otto\", role = \"cph\",\n           comment = \"Bootstrap icons maintainer\")\n  )",
+        "Description": "Easily use 'Bootstrap' icons inside 'Shiny' apps and 'R\n    Markdown' documents. More generally, icons can be inserted in any\n    'htmltools' document through inline 'SVG'.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/rstudio/bsicons",
+        "BugReports": "https://github.com/rstudio/bsicons/issues",
+        "Depends": "R (>= 2.10)",
+        "Imports": "cli, htmltools, rlang, utils",
+        "Suggests": "bslib, processx, testthat, webshot2, withr",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-11-03 23:29:00 UTC; cpsievert",
+        "Author": "Carson Sievert [cre, aut] (<https://orcid.org/0000-0002-4958-2844>),\n  Posit Software, PBC [cph, fnd],\n  Mark Otto [cph] (Bootstrap icons maintainer)",
+        "Maintainer": "Carson Sievert <carson@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-11-04 00:30:05 UTC",
+        "Built": "R 4.6.0; ; 2026-05-25 02:40:52 UTC; unix",
+        "RemoteType": "standard",
+        "RemoteRef": "bsicons",
+        "RemotePkgRef": "bsicons",
+        "RemoteRepos": "https://cloud.r-project.org",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "source",
+        "RemoteSha": "0.1.2"
+      }
+    },
     "bslib": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -1745,16 +1779,28 @@
       "checksum": "949b48b50864e8dc112a3ef178f167b8"
     },
     "components/htmlInput.R": {
-      "checksum": "0d530d6bbdc86d11eb432df02e911e0c"
+      "checksum": "e275f33269f99ddd0c4199b464dec6b1"
     },
     "components/pathList.R": {
-      "checksum": "9cf122e5972485f3ec7557d6a9efd3dc"
+      "checksum": "647e0e8d1e4b0067c0795202a2c431e8"
+    },
+    "components/pathPreview/linksTable.R": {
+      "checksum": "fb611fd30a52673997c5c33320a969d6"
+    },
+    "components/pathPreview/modal.R": {
+      "checksum": "b3061f67868adb4e0e969dc0f1cb1ead"
+    },
+    "components/pathPreview/pathDisplay.R": {
+      "checksum": "2184d6fc1d9318035e0ebe52f1de5ef9"
+    },
+    "components/pathPreview/previewAccordion.R": {
+      "checksum": "b9f9374a4809a7eca9b8aae2f08399cf"
     },
     "requirements.txt": {
       "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
-      "checksum": "f2bc7dd1881c623a15c3747a00c0d87d"
+      "checksum": "3bf756fe7b3ee7a3e562814f8d82f246"
     }
   },
   "users": null
