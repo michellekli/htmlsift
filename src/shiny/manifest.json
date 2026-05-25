@@ -1782,7 +1782,7 @@
       "checksum": "c6b73653d5268985c680ad312437df90"
     },
     "components/pathList.R": {
-      "checksum": "c4d0df452fa6027df9ddd4517d76d114"
+      "checksum": "dea47c3c96d2dc35473d502d95d23ccf"
     },
     "components/pathPreview/linksTable.R": {
       "checksum": "b455ec1a34764ebaeb4987c1616005f8"
@@ -1794,13 +1794,13 @@
       "checksum": "4e9e932797bb72e294bebedac9de9c37"
     },
     "components/pathPreview/previewAccordion.R": {
-      "checksum": "987bb3a574421a9536831d4108710478"
+      "checksum": "4cdd4876d27450a3ffb5ceee0a5c3678"
     },
     "requirements.txt": {
       "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
-      "checksum": "9dac14b2b318efe9f3451d213a12b3f3"
+      "checksum": "48e9fb71b66ea378437db09229f0233b"
     }
   },
   "users": null
