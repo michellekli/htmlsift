@@ -35,7 +35,10 @@ server <- function(id, selected_path) {
 
       isolate({
         output$path_text <- renderText({
-          selected_path()
+          tryCatch(selected_path(), error = function(e) {
+            # Return error string for display
+            "[Unable to display path]"
+          })
         })
       })
     })

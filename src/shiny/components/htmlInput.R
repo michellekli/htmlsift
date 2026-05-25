@@ -4,7 +4,12 @@ box::use(
   reticulate[import_from_path],
 )
 
-sanitizer <- import_from_path("sanitizer", here::here("src", "python"))
+sanitizer <- tryCatch(
+  import_from_path("sanitizer", here::here("src", "python")),
+  error = function(e) {
+    stop("Unable to import Python sanitizer module: ", e$message)
+  }
+)
 
 #' @export
 ui <- function(id) {
