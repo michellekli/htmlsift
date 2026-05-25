@@ -41,8 +41,6 @@ server <- function(id, selected_path) {
 
     # Handle change in selected_path
     output$path_text <- renderText({
-      req(selected_path())
-
       validate(need(selected_path(), "No path selected."))
       selected_path()
     }) |> bindEvent(selected_path())
