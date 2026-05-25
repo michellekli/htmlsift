@@ -61,8 +61,11 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
     # --- EVENT HANDLING ---
     # ----------------------
 
-    # Handle change in selected_path
-    observeEvent(selected_path(), isolate({
+    # Handle change in selected_path or parsed_tree_root
+    # Need both because of potential race condition
+    observeEvent(debounce(reactive({
+      c(selected_path(), parsed_tree_root())
+    }), 200)(), isolate({
       req(selected_path(), parsed_tree_root())
       path <- selected_path()
       root <- parsed_tree_root()
