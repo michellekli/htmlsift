@@ -1,3 +1,5 @@
+# Preview modal module: shows extracted content preview with confirm/cancel
+
 box::use(
   bslib[...],
   shiny[...],
@@ -24,31 +26,29 @@ parser <- tryCatch(
 ui <- function(id) {
   ns <- NS(id)
 
-  tagList(
-    modalDialog(
-      title = "Extract all content?",
-      size = "l",
-      # easyClose must not be allowed because no easy way to listen for it
-      # and trigger the corresponding Cancel logic
-      easyClose = FALSE,
-      footer = NULL, # no footer, action buttons are at the top
-      tagList(
-        p("The first three items at this path are shown below."),
-        div(
-          class = "d-flex justify-content-end gap-2 mb-3",
-          tooltip(
-            actionButton(ns("cancel"), "Cancel"),
-            "Cancel and return to path selection."
-          ),
-          tooltip(
-            actionButton(ns("confirm"), "Extract", class = "btn-primary"),
-            "Confirm extraction of content at the selected path."
-          )
+  modalDialog(
+    title = "Extract all content?",
+    size = "l",
+    # easyClose must not be allowed because no easy way to listen for it
+    # and trigger the corresponding Cancel logic
+    easyClose = FALSE,
+    footer = NULL, # no footer, action buttons are at the top
+    tagList(
+      p("The first three items at this path are shown below."),
+      div(
+        class = "d-flex justify-content-end gap-2 mb-3",
+        tooltip(
+          actionButton(ns("cancel"), "Cancel"),
+          "Cancel and return to path selection."
+        ),
+        tooltip(
+          actionButton(ns("confirm"), "Extract", class = "btn-primary"),
+          "Confirm extraction of content at the selected path."
         )
-      ),
-      pathDisplay$ui(ns("path_display")),
-      previewAccordion$ui(ns("preview_accordion"))
-    )
+      )
+    ),
+    pathDisplay$ui(ns("path_display")),
+    previewAccordion$ui(ns("preview_accordion"))
   )
 }
 
@@ -72,6 +72,11 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
     # Init state
     preview_data <- reactiveVal(NULL)
 
+    # Debounce
+    get_preview_data_d <- debounce(reactive({
+      c(selected_path(), parsed_tree_root())
+    }), 200)
+
     # Clean up reactive values when the session ends
     session$onSessionEnded(function() {
       preview_data(NULL)
@@ -89,9 +94,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
 
     # Handle change in selected_path or parsed_tree_root
     # Need both because of potential race condition
-    observeEvent(debounce(reactive({
-      c(selected_path(), parsed_tree_root())
-    }), 200)(), {
+    observeEvent(get_preview_data_d(), {
       req(selected_path(), parsed_tree_root())
       path <- selected_path()
       root <- parsed_tree_root()

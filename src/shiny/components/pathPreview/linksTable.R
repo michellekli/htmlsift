@@ -2,6 +2,7 @@
 box::use(
   bslib[...],
   shiny[...],
+  DT,
 )
 
 #' Links table module UI
@@ -28,6 +29,8 @@ server <- function(id, links_reactive) {
     # ----------------------
     # --- REACTIVE STATE ---
     # ----------------------
+
+    # No state
 
     # ----------------------
     # --- EVENT HANDLING ---

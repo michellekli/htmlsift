@@ -1,4 +1,10 @@
-box::use(bslib[...], shiny[...], )
+# Path list module: renders parsed paths in a selectable widget
+
+box::use(
+  bslib[...],
+  shiny[...],
+  DT,
+)
 
 #' Path list module UI
 #'
@@ -21,16 +27,16 @@ ui <- function(id) {
 #' Renders a data table of parsed paths and handles row selection.
 #'
 #' @param id Module namespace identifier.
-#' @param paths A reactive data frame path details.
+#' @param paths A reactiveVal containing a data frame of path details.
 #' @param selected_path A reactiveVal to store the selected path string.
 #' @export
 server <- function(id, paths, selected_path) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # -----------------------
-    # --- REACTIVE STATE ----
-    # -----------------------
+    # ----------------------
+    # --- REACTIVE STATE ---
+    # ----------------------
     # Init state
     # Create proxy to datatable for manipulation
     proxy <- DT::dataTableProxy(ns("dt"))
@@ -74,14 +80,14 @@ server <- function(id, paths, selected_path) {
         rownames = FALSE
       ) |>
         DT::formatStyle(
-          columns = c(1, 2),
+          columns = c("frequency", "path"),
           `max-width` = "25px",
           `white-space` = "nowrap",
           `overflow` = "hidden",
           `text-overflow` = "ellipsis"
         ) |>
         DT::formatStyle(
-          columns = c(3),
+          columns = c("first_text"),
           `max-width` = "150px",
           `white-space` = "nowrap",
           `overflow` = "hidden",
