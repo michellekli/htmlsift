@@ -44,6 +44,14 @@ server <- function(id, preview_data) {
       length(links_modules()) - n_servers()
     })
 
+    # Clean up reactive values when the session ends
+    session$onSessionEnded(function() {
+      links_modules(NULL)
+      n_servers(NULL)
+
+      gc()
+    })
+
     # ----------------------
     # --- EVENT HANDLING ---
     # ----------------------
