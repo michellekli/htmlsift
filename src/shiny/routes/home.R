@@ -67,8 +67,11 @@ server <- function(input, output, session) {
   observeEvent(sanitized_html(), isolate({
     tryCatch({
       tree <- parser$parse_html_to_tree(sanitized_html())
+
+      # Update state to store parsed tree object
       parsed_tree_root(tree)
 
+      # Update state to store parsed paths
       tree |>
         parser$get_path_stats() |>
         do.call(rbind, args = _) |>
@@ -100,6 +103,7 @@ server <- function(input, output, session) {
 
   # Handle change in extraction_path
   observeEvent(extraction_path(), isolate({
+    # Display extraction path for demonstration
     output$selected_output <- renderPrint({
       tryCatch({
         if (is.null(extraction_path())) {

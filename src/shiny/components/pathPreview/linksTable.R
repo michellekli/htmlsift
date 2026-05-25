@@ -37,6 +37,7 @@ server <- function(id, links) {
         }
       })
 
+      # Create links display
       output$links_dt <- DT::renderDT({
         req(length(links) > 0)
 

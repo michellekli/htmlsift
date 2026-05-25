@@ -38,19 +38,24 @@ server <- function(id, preview_data) {
       req(length(data) > 0)
 
       tryCatch({
+        # Create accordion for each item in preview_data
         output$accordion_container <- renderUI({
+          # Create unique module IDs for each item's links table
           module_ids <- lapply(seq_along(data), function(i) {
             paste0("links_", i)
           })
           links_modules(module_ids)
 
+          # Create accordion panels for each preview item
           panels <- lapply(seq_along(data), function(i) {
             item <- data[[i]]
             module_id <- module_ids[[i]]
 
+            # Create links table for item
             links_ui <- linksTable$ui(ns(module_id))
             linksTable$server(module_id, item$links %||% list())
 
+            # Create text preview div
             text_ui <- div(style = "
                            max-height: 200px;
                            overflow-y: auto;
@@ -59,6 +64,7 @@ server <- function(id, preview_data) {
                            margin-top: 10px;",
                            item$text)
 
+            # Create accordion panel
             accordion_panel(title = paste("Item", i),
                             div(
                               em("Text Content:"),
@@ -70,6 +76,7 @@ server <- function(id, preview_data) {
                             icon = bsicons::bs_icon("card-text"))
           })
 
+          # Return accordion container with all accordion panels
           do.call(accordion, c(list(
             id = ns("accordion_widget"), open = TRUE
           ), panels))

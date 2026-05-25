@@ -68,6 +68,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
       root <- parsed_tree_root()
 
       tryCatch({
+        # Update state with preview data for selected_path
         preview_data(parser$get_content_for_path(root,
                                                  path,
                                                  limit = as.integer(3)))

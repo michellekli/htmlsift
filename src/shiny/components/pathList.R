@@ -38,6 +38,7 @@ server <- function(id, paths, selected_path) {
       tryCatch({
         df <- paths()[, c("frequency", "path", "first_text")]
 
+        # Render the data table with single-row selection
         output$dt <- DT::renderDataTable({
           DT::datatable(
             df,
@@ -89,6 +90,7 @@ server <- function(id, paths, selected_path) {
         selected_row <- input$dt_rows_selected
         path_string <- paths()[["path"]][[selected_row]]
 
+        # Set state of selected_path
         selected_path(path_string)
       }, error = function(e) {
         showNotification(
