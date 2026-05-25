@@ -57,7 +57,7 @@ server <- function(id, preview_data) {
     # ----------------------
 
     # Handle change in preview_data
-    observeEvent(preview_data(), isolate({
+    observeEvent(preview_data(), {
       data <- preview_data()
       req(length(data) > 0)
 
@@ -109,7 +109,7 @@ server <- function(id, preview_data) {
           id = ns("accordion_widget"), open = TRUE
         ), panels))
       })
-    }))
+    })
 
     # Initialize servers for the links UI.
     # No way to manually clean up server modules, so make sure
@@ -117,7 +117,7 @@ server <- function(id, preview_data) {
     # all the links UI.
     # Must be outside renderUI for proper clean up
     # when the entire UI for this module is removed.
-    observeEvent(n_servers_to_init(), isolate({
+    observeEvent(n_servers_to_init(), {
       n <- n_servers_to_init()
       req(n > 0)
 
@@ -130,6 +130,6 @@ server <- function(id, preview_data) {
 
       # Update state to reflect newly initialized servers
       n_servers(n_servers() + n)
-    }))
+    })
   })
 }

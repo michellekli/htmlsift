@@ -43,11 +43,9 @@ server <- function(id, selected_path) {
     observeEvent(selected_path(), {
       req(selected_path())
 
-      isolate({
-        output$path_text <- renderText({
-          validate(need(selected_path(), "No path selected."))
-          selected_path()
-        })
+      output$path_text <- renderText({
+        validate(need(selected_path(), "No path selected."))
+        selected_path()
       })
     })
 

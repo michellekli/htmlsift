@@ -34,7 +34,7 @@ server <- function(id, links_reactive) {
     # ----------------------
 
     # Handle change in links
-    observeEvent(links_reactive(), isolate({
+    observeEvent(links_reactive(), {
       links <- links_reactive()
 
       # Create container for links
@@ -91,6 +91,6 @@ server <- function(id, links_reactive) {
           )
         })
       })
-    }))
+    })
   })
 }
