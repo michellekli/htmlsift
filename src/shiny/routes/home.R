@@ -86,7 +86,7 @@ server <- function(input, output, session) {
   # --- EVENT HANDLING ---
   # ----------------------
   # Handle change in stored HTML
-  observeEvent(sanitized_html(), isolate({
+  observeEvent(sanitized_html(), {
     withProgress(
       message = "Parsing HTML...",
       value = 0.5,
@@ -112,23 +112,23 @@ server <- function(input, output, session) {
         })
       }
     )
-  }))
+  })
 
   # Handle change in selected_path
-  observeEvent(selected_path(), isolate({
+  observeEvent(selected_path(), {
     path <- selected_path()
     req(!is.null(path), nchar(path) > 0)
 
     showModal(pathPreviewModal$ui("path_preview_modal"))
-  }))
+  })
 
   # Handle change in extraction_path
-  observeEvent(extraction_path(), isolate({
+  observeEvent(extraction_path(), {
     # Display extraction path for demonstration
     output$selected_output <- renderPrint({
       validate(need(extraction_path(), "No path selected for extraction"))
       cat("Extraction path:\n")
       cat(extraction_path())
     })
-  }))
+  })
 }

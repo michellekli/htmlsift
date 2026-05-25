@@ -74,7 +74,7 @@ server <- function(id, sanitized_html) {
     # --- EVENT HANDLING ---
     # ----------------------
     # Handle Process HTML button click
-    observeEvent(input$process_html, isolate({
+    observeEvent(input$process_html, {
       # Clear state
       sanitized_html(NULL)
 
@@ -115,10 +115,10 @@ server <- function(id, sanitized_html) {
 
       # Set state of status
       process_html_status(result)
-    }))
+    })
 
     # Handle processing status change
-    observeEvent(process_html_status(), isolate({
+    observeEvent(process_html_status(), {
       result <- process_html_status()
 
       # Set state of status message
@@ -146,6 +146,6 @@ server <- function(id, sanitized_html) {
           )
         }
       })
-    }))
+    })
   })
 }

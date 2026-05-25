@@ -91,7 +91,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
     # Need both because of potential race condition
     observeEvent(debounce(reactive({
       c(selected_path(), parsed_tree_root())
-    }), 200)(), isolate({
+    }), 200)(), {
       req(selected_path(), parsed_tree_root())
       path <- selected_path()
       root <- parsed_tree_root()
@@ -114,24 +114,24 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
           })
         }
       )
-    }))
+    })
 
     # Handle Confirm button click
-    observeEvent(input$confirm, isolate({
+    observeEvent(input$confirm, {
       # Update state with path for extraction
       extraction_path(selected_path())
 
       # Close modal
       removeModal()
-    }))
+    })
 
     # Handle Cancel button click
-    observeEvent(input$cancel, isolate({
+    observeEvent(input$cancel, {
       # Clear state for selected path
       selected_path(NULL)
 
       # Close modal
       removeModal()
-    }))
+    })
   })
 }

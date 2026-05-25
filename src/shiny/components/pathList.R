@@ -46,7 +46,7 @@ server <- function(id, paths, selected_path) {
     # ----------------------
 
     # Handle updates to stored paths
-    observeEvent(paths(), isolate({
+    observeEvent(paths(), {
       req(paths())
 
       tryCatch({
@@ -100,10 +100,10 @@ server <- function(id, paths, selected_path) {
           type = "error"
         )
       })
-    }))
+    })
 
     # Handle row selection
-    observeEvent(input$dt_rows_selected, isolate({
+    observeEvent(input$dt_rows_selected, {
       req(input$dt_rows_selected)
       req(paths())
 
@@ -112,10 +112,10 @@ server <- function(id, paths, selected_path) {
 
       # Set state of selected_path
       selected_path(path_string)
-    }))
+    })
 
     # Handle selected_path being cleared
-    observeEvent(selected_path(), isolate({
+    observeEvent(selected_path(), {
       path <- selected_path()
 
       if (is.null(path)) {
@@ -125,6 +125,6 @@ server <- function(id, paths, selected_path) {
           NULL
         )
       }
-    }), ignoreNULL = FALSE)
+    }, ignoreNULL = FALSE)
   })
 }
