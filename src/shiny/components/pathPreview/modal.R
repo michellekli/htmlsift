@@ -66,6 +66,13 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
     # Init state
     preview_data <- reactiveVal(NULL)
 
+    # Clean up reactive values when the session ends
+    session$onSessionEnded(function() {
+      preview_data(NULL)
+
+      gc()
+    })
+
     # Pass state for communication
     pathDisplay$server("path_display", selected_path)
     previewAccordion$server("preview_accordion", preview_data)
