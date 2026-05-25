@@ -35,42 +35,49 @@ server <- function(id, paths, selected_path) {
     observeEvent(paths(), isolate({
       req(paths())
 
-      df <- paths()[, c("frequency", "path", "first_text")]
+      tryCatch({
+        df <- paths()[, c("frequency", "path", "first_text")]
 
-      # Render the data table with single-row selection
-      output$dt <- DT::renderDataTable({
-        DT::datatable(
-          df,
-          colnames = c("Count", "Path", "First Text"),
-          selection = list(mode = "single", target = "row"),
-          options = list(
-            fillContainer = TRUE,
-            paging = FALSE,
-            searching = TRUE,
-            ordering = FALSE,
-            info = TRUE,
-            columnDefs = list(
-              list(className = "dt-right", targets = 0),
-              list(className = "dt-left", targets = 1),
-              list(className = "dt-left", targets = 2)
-            )
-          ),
-          rownames = FALSE
-        ) |>
-          DT::formatStyle(
-            columns = c(1, 2),  # 1-based for formatStyle
-            `max-width` = "25px",
-            `white-space` = "nowrap",
-            `overflow` = "hidden",
-            `text-overflow` = "ellipsis"
+        # Render the data table with single-row selection
+        output$dt <- DT::renderDataTable({
+          DT::datatable(
+            df,
+            colnames = c("Count", "Path", "First Text"),
+            selection = list(mode = "single", target = "row"),
+            options = list(
+              fillContainer = TRUE,
+              paging = FALSE,
+              searching = TRUE,
+              ordering = FALSE,
+              info = TRUE,
+              columnDefs = list(
+                list(className = "dt-right", targets = 0),
+                list(className = "dt-left", targets = 1),
+                list(className = "dt-left", targets = 2)
+              )
+            ),
+            rownames = FALSE
           ) |>
-          DT::formatStyle(
-            columns = c(3),  # 1-based for formatStyle
-            `max-width` = "150px",
-            `white-space` = "nowrap",
-            `overflow` = "hidden",
-            `text-overflow` = "ellipsis"
-          )
+            DT::formatStyle(
+              columns = c(1, 2),
+              `max-width` = "25px",
+              `white-space` = "nowrap",
+              `overflow` = "hidden",
+              `text-overflow` = "ellipsis"
+            ) |>
+            DT::formatStyle(
+              columns = c(3),
+              `max-width` = "150px",
+              `white-space` = "nowrap",
+              `overflow` = "hidden",
+              `text-overflow` = "ellipsis"
+            )
+        })
+      }, error = function(e) {
+        showNotification(
+          paste("Unable to show paths for selection:", e$message),
+          type = "error"
+        )
       })
     }))
 
@@ -79,11 +86,18 @@ server <- function(id, paths, selected_path) {
       req(input$dt_rows_selected)
       req(paths())
 
-      selected_row <- input$dt_rows_selected
-      path_string <- paths()[["path"]][[selected_row]]
+      tryCatch({
+        selected_row <- input$dt_rows_selected
+        path_string <- paths()[["path"]][[selected_row]]
 
-      # Set state of selected_path
-      selected_path(path_string)
+        # Set state of selected_path
+        selected_path(path_string)
+      }, error = function(e) {
+        showNotification(
+          paste("Unable to select path:", e$message),
+          type = "error"
+        )
+      })
     }))
 
     # Handle selected_path being cleared

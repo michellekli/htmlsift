@@ -41,23 +41,38 @@ server <- function(id, links) {
       output$links_dt <- DT::renderDT({
         req(length(links) > 0)
 
-        links_df <- data.frame(
-          href = unlist(links)
-        )
+        tryCatch({
+          links_df <- data.frame(
+            href = unlist(links)
+          )
 
-        DT::datatable(
-          links_df,
-          options = list(
-            pageLength = 3,
-            scrollY = "100px",
-            scrollCollapse = TRUE,
-            paging = FALSE,
-            searching = FALSE,
-            info = FALSE
-          ),
-          rownames = FALSE,
-          selection = "none"
-        )
+          DT::datatable(
+            links_df,
+            options = list(
+              pageLength = 3,
+              scrollY = "100px",
+              scrollCollapse = TRUE,
+              paging = FALSE,
+              searching = FALSE,
+              info = FALSE
+            ),
+            rownames = FALSE,
+            selection = "none"
+          )
+        }, error = function(e) {
+          DT::datatable(
+            data.frame(href = paste("Unable to load links:", e$message)),
+            options = list(
+              scrollY = "100px",
+              scrollCollapse = TRUE,
+              paging = FALSE,
+              searching = FALSE,
+              info = FALSE
+            ),
+            rownames = FALSE,
+            selection = "none"
+          )
+        })
       })
     }))
   })

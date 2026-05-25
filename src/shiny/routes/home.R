@@ -9,7 +9,12 @@ box::use(
   pathPreviewModal = ../components/pathPreview/modal
 )
 
-parser <- reticulate::import_from_path("parser", here::here("src", "python"))
+parser <- tryCatch(
+  reticulate::import_from_path("parser", here::here("src", "python")),
+  error = function(e) {
+    stop("Unable to import Python parser module: ", e$message)
+  }
+)
 
 #' @export
 ui <- function() {
@@ -60,16 +65,25 @@ server <- function(input, output, session) {
   # ----------------------
   # Handle change in stored HTML
   observeEvent(sanitized_html(), isolate({
-    # todo error handling
-    # Update state to store parsed tree object
-    parsed_tree_root(parser$parse_html_to_tree(sanitized_html()))
+    tryCatch({
+      tree <- parser$parse_html_to_tree(sanitized_html())
 
-    # Update state to store parsed paths
-    parsed_tree_root() |>
-      parser$get_path_stats() |>
-      do.call(rbind, args = _) |> # turn list of lists into a matrix
-      data.frame() |>
-      parsed_paths()
+      # Update state to store parsed tree object
+      parsed_tree_root(tree)
+
+      # Update state to store parsed paths
+      tree |>
+        parser$get_path_stats() |>
+        do.call(rbind, args = _) |>
+        data.frame() |>
+        parsed_paths()
+    }, error = function(e) {
+      showNotification(
+        paste("Unable to parse HTML:", e$message),
+        type = "error",
+        duration = NULL
+      )
+    })
   }))
 
   # Handle change in selected_path
@@ -77,20 +91,30 @@ server <- function(input, output, session) {
     path <- selected_path()
     req(!is.null(path), nchar(path) > 0)
 
-    # Show modal
-    showModal(pathPreviewModal$ui("path_preview_modal"))
+    tryCatch({
+      showModal(pathPreviewModal$ui("path_preview_modal"))
+    }, error = function(e) {
+      showNotification(
+        paste("Unable to show path preview:", e$message),
+        type = "error"
+      )
+    })
   }))
 
   # Handle change in extraction_path
   observeEvent(extraction_path(), isolate({
     # Display extraction path for demonstration
     output$selected_output <- renderPrint({
-      if (is.null(extraction_path())) {
-        "No path selected for extraction"
-      } else {
-        cat("Extraction path:\n")
-        cat(extraction_path())
-      }
+      tryCatch({
+        if (is.null(extraction_path())) {
+          "No path selected for extraction"
+        } else {
+          cat("Extraction path:\n")
+          cat(extraction_path())
+        }
+      }, error = function(e) {
+        paste("Unable to display extraction path:", e$message)
+      })
     })
   }))
 
