@@ -1,8 +1,13 @@
 # Displays an accordion with preview items (links + text)
 
-box::use(bslib[...], shiny[...], )
+box::use(
+  bslib[...],
+  shiny[...],
+)
 
-box::use(. / linksTable)
+box::use(
+  ./linksTable
+)
 
 #' @export
 ui <- function(id) {

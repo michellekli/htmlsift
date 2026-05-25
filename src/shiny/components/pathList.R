@@ -92,10 +92,9 @@ server <- function(id, paths, selected_path) {
 
       if (is.null(path)) {
         # Clear selection from datatable display
-        DT::reloadData(
+        DT::selectRows(
           proxy,
-          resetPaging = FALSE,
-          clearSelection = "all"
+          NULL
         )
       }
     }), ignoreNULL = FALSE)
