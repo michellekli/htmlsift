@@ -42,6 +42,10 @@ server <- function(id, links) {
         req(length(links) > 0)
 
         tryCatch({
+          validate(
+            need(is.list(links) || is.vector(links),
+                 "Links data must be a list or vector.")
+          )
           links_df <- data.frame(
             href = unlist(links)
           )

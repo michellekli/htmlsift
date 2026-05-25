@@ -49,6 +49,9 @@ server <- function(id, preview_data) {
           # Create accordion panels for each preview item
           panels <- lapply(seq_along(data), function(i) {
             item <- data[[i]]
+            validate(
+              need(is.list(item), paste("Preview item", i, "is not a list."))
+            )
             module_id <- module_ids[[i]]
 
             # Create links table for item
