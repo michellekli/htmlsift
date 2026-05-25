@@ -1,4 +1,8 @@
-box::use(bslib[...], shiny[...], )
+box::use(
+  bslib[...],
+  shiny[...],
+  DT,
+)
 
 #' Path list module UI
 #'

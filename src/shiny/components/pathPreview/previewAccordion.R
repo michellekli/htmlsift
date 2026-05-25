@@ -3,6 +3,7 @@
 box::use(
   bslib[...],
   shiny[...],
+  bsicons,
 )
 
 box::use(

@@ -2,6 +2,7 @@
 box::use(
   bslib[...],
   shiny[...],
+  DT,
 )
 
 #' Links table module UI

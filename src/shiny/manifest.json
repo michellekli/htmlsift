@@ -1782,10 +1782,10 @@
       "checksum": "2518fbea01cf7381eca2a7b3d7326eec"
     },
     "components/pathList.R": {
-      "checksum": "974dab359f04b6f8bd0ee5ba80ada517"
+      "checksum": "ff4cf329511e923f8c418d0d241ab85c"
     },
     "components/pathPreview/linksTable.R": {
-      "checksum": "a1915071d2c29b712a60838041dc6033"
+      "checksum": "ff7a588f0088af11a209287debdd2c34"
     },
     "components/pathPreview/modal.R": {
       "checksum": "d04a012dce7bf3889b9f78fc2421f7f3"
@@ -1794,7 +1794,7 @@
       "checksum": "d56cedd4c4ef54903b321c1bdd70ca16"
     },
     "components/pathPreview/previewAccordion.R": {
-      "checksum": "c50a44c4443c8124811de2833b595503"
+      "checksum": "3d89380a0bf8ef17d1795827855f9d0b"
     },
     "requirements.txt": {
       "checksum": "c7c7f803f0d19352c5d839e223835618"
