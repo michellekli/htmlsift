@@ -24,31 +24,29 @@ parser <- tryCatch(
 ui <- function(id) {
   ns <- NS(id)
 
-  tagList(
-    modalDialog(
-      title = "Extract all content?",
-      size = "l",
-      # easyClose must not be allowed because no easy way to listen for it
-      # and trigger the corresponding Cancel logic
-      easyClose = FALSE,
-      footer = NULL, # no footer, action buttons are at the top
-      tagList(
-        p("The first three items at this path are shown below."),
-        div(
-          class = "d-flex justify-content-end gap-2 mb-3",
-          tooltip(
-            actionButton(ns("cancel"), "Cancel"),
-            "Cancel and return to path selection."
-          ),
-          tooltip(
-            actionButton(ns("confirm"), "Extract", class = "btn-primary"),
-            "Confirm extraction of content at the selected path."
-          )
+  modalDialog(
+    title = "Extract all content?",
+    size = "l",
+    # easyClose must not be allowed because no easy way to listen for it
+    # and trigger the corresponding Cancel logic
+    easyClose = FALSE,
+    footer = NULL, # no footer, action buttons are at the top
+    tagList(
+      p("The first three items at this path are shown below."),
+      div(
+        class = "d-flex justify-content-end gap-2 mb-3",
+        tooltip(
+          actionButton(ns("cancel"), "Cancel"),
+          "Cancel and return to path selection."
+        ),
+        tooltip(
+          actionButton(ns("confirm"), "Extract", class = "btn-primary"),
+          "Confirm extraction of content at the selected path."
         )
-      ),
-      pathDisplay$ui(ns("path_display")),
-      previewAccordion$ui(ns("preview_accordion"))
-    )
+      )
+    ),
+    pathDisplay$ui(ns("path_display")),
+    previewAccordion$ui(ns("preview_accordion"))
   )
 }
 
