@@ -1,4 +1,4 @@
-# Preview modal module: shows extracted content preview with confirm/cancel
+# Path preview module: shows extracted content preview with confirm/cancel
 
 box::use(
   bslib[...],
@@ -20,41 +20,31 @@ parser <- import_python("parser")
 #' Path preview modal UI
 #'
 #' @param id Module namespace identifier.
-#' @return A modal dialog with path display, preview accordion,
-#' and confirm/cancel buttons.
+#' @return A card with path display, preview accordion, and confirm button.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
 
-  modalDialog(
-    title = "Extract all content?",
-    size = "l",
-    # easyClose must not be allowed because no easy way to listen for it
-    # and trigger the corresponding Cancel logic
-    easyClose = FALSE,
-    footer = NULL, # no footer, action buttons are at the top
-    tagList(
-      p("The first three items at this path are shown below."),
-      div(
-        class = "d-flex justify-content-end gap-2 mb-3",
-        tooltip(
-          actionButton(ns("cancel"), "Cancel"),
-          "Cancel and return to path selection."
-        ),
+  conditionalPanel(
+    condition = "output.has_preview",
+    ns = ns,
+    card(
+      card_header("The first three items at this path are shown below."),
+      card_body(
         tooltip(
           actionButton(ns("confirm"), "Extract", class = "btn-primary"),
           "Confirm extraction of content at the selected path."
         )
-      )
-    ),
-    pathDisplay$ui(ns("path_display")),
-    previewAccordion$ui(ns("preview_accordion"))
+      ),
+      pathDisplay$ui(ns("path_display")),
+      previewAccordion$ui(ns("preview_accordion"))
+    )
   )
 }
 
 #' Path preview modal server
 #'
-#' Loads preview data for the selected path and manages confirm/cancel workflow.
+#' Loads preview data for the selected path and manages confirm workflow.
 #'
 #' @param id Module namespace identifier.
 #' @param selected_path A reactiveVal with the currently selected path.
@@ -75,6 +65,9 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
     # Debounce
     get_preview_data_d <- debounce(reactive({
       c(selected_path(), parsed_tree_root())
+    }), 200)
+    get_has_preview_d <- debounce(reactive({
+      c(preview_data(), selected_path())
     }), 200)
 
     # Clean up reactive values when the session ends
@@ -122,27 +115,20 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
       })
     })
 
+    # Handle updates to preview data and selection path
+    # Output for conditionalPanel - indicates if preview is available
+    output$has_preview <- reactive({
+      isTruthy(preview_data()) && isTruthy(selected_path())
+    }) |> bindEvent(get_has_preview_d())
+    # Must set suspendWhenHidden = FALSE to detect changes to has_preview
+    outputOptions(output, "has_preview", suspendWhenHidden = FALSE)
+
     # Handle Confirm button click
     observeEvent(input$confirm, {
       log_info("Extraction confirmed for path: {selected_path()}")
       # Update state with path for extraction
       extraction_path(selected_path())
-
-      # Clear state for selected_path
-      selected_path(NULL)
-
-      # Close modal
-      removeModal()
     })
 
-    # Handle Cancel button click
-    observeEvent(input$cancel, {
-      log_info("Extraction cancelled for path: {selected_path()}")
-      # Clear state for selected path
-      selected_path(NULL)
-
-      # Close modal
-      removeModal()
-    })
   })
 }

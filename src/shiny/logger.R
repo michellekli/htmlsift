@@ -2,10 +2,7 @@
 
 box::use(
   logger[
-    log_appender,
     log_threshold,
-    appender_console,
-    layout_glue_colors,
     INFO
   ],
 )

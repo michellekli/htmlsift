@@ -19,21 +19,23 @@ parser <- import_python("parser")
 
 #' Extraction Zone UI
 #'
-#' Creates the UI for the extraction zone card, which displays extracted data
+#' Creates the UI for the extraction zone, which displays extracted data
 #' in JSON or CSV format with download capability.
 #'
 #' @param id The module ID
 #'
-#' @return A Shiny card UI element with format selector, data preview, and
-#'   download button
+#' @return A modal with format selector, data preview, and download button
 #' @export
 ui <- function(id) {
   ns <- NS(id)
 
-  card(
-    card_header("Extraction Zone"),
-    card_body(
-      # Format selection
+  modalDialog(
+    size = "l",
+    # easyClose must not be allowed because no easy way to listen for it
+    # and trigger the corresponding Cancel logic
+    easyClose = FALSE,
+    footer = NULL,
+    card(card_header(
       tooltip(
         selectInput(
           ns("format"),
@@ -41,28 +43,26 @@ ui <- function(id) {
           choices = c("JSON", "CSV"),
           selected = "JSON"
         ),
-        "Choose the format for preview and download."
+        "Choose the format for preview and download.",
+        placement = "top"
       ),
-
-      # Display area for formatted data
-      div(
-        style = "overflow: auto; max-height: 60vh",
-        verbatimTextOutput(ns("data_preview"))
+      tooltip(
+        downloadButton(ns("download"),
+                       label = "Download Data",
+                       class = "btn-primary mt-2"),
+        "Download the extracted data in the selected format.",
+        placement = "top"
       ),
-
-      conditionalPanel(
-        condition = "output.has_data",
-        ns = ns,
-        tooltip(
-          downloadButton(
-            ns("download"),
-            label = "Download Data",
-            class = "btn-primary mt-2"
-          ),
-          "Download the extracted data in the selected format."
-        )
+      tooltip(
+        actionButton(ns("cancel"), "Go Back"),
+        "Return to path selection.",
+        placement = "top"
       )
-    )
+    ), card_body(
+      # Display area for formatted data
+      div(style = "overflow: auto; max-height: 60vh",
+          verbatimTextOutput(ns("data_preview"))),
+    ))
   )
 }
 
@@ -141,6 +141,7 @@ server <- function(id, extraction_path, parsed_tree_root) {
     # Get string representing content in selected output format
     observeEvent(get_formatted_data_d(), {
       validate(need(all_extracted_data(), "No extracted data available."))
+      validate(need(input$format, "No format selected"))
 
       format <- input$format
       data <- all_extracted_data()
@@ -233,5 +234,15 @@ server <- function(id, extraction_path, parsed_tree_root) {
         "text/csv"
       }
     )
+
+    # Handle Cancel button click
+    observeEvent(input$cancel, {
+      log_info("Extraction cancelled for path: {extraction_path()}")
+      # Clear state for selected path
+      extraction_path(NULL)
+
+      # Close modal
+      removeModal()
+    })
   })
 }
