@@ -26,17 +26,17 @@ def parse_html_to_tree(html_string: str) -> html.HtmlElement:
 
     >>> root = parse_html_to_tree("<div><p>Test</p></div>")
     >>> html.tostring(root)
-    b'<div><p>Test</p></div>'
+    b'<html><body><div><p>Test</p></div></body></html>'
     >>> print(root.tag)
-    div
+    html
     >>> print(root[0].tag)
-    p
+    body
 
     >>> root2 = parse_html_to_tree("<p>Hi")
     >>> html.tostring(root2)
-    b'<p>Hi</p>'
+    b'<html><body><p>Hi</p></body></html>'
     """
-    return html.fromstring(html_string)
+    return html.document_fromstring(html_string)
 
 
 def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
@@ -50,27 +50,27 @@ def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
     extracted recursively from the node, stripped, and truncated to 100 chars,
     and an array of hyperlink references found in the subtree.
 
-    >>> root = html.fromstring("<div><span>A</span><span>B</span></div>")
+    >>> root = html.document_fromstring("<div><span>A</span><span>B</span></div>")
     >>> freqs = get_path_stats(root)
     >>> len(freqs)
-    2
+    4
     >>> freqs[0]['path']
-    'div/span'
+    'html/body/div/span'
     >>> freqs[0]['frequency']
     2
     >>> freqs[0]['first_text']
     'A'
     >>> freqs[1]['first_text']
     'AB'
-    >>> len(root.xpath(f"//{freqs[0]['path']}"))
+    >>> len(root.xpath(f"/{freqs[0]['path']}"))
     2
     >>> freqs[0]['links']
     []
 
-    >>> root2 = html.fromstring('<div><a href="/a">A</a><a href="/b">B</a></div>')
+    >>> root2 = html.document_fromstring('<div><a href="/a">A</a><a href="/b">B</a></div>')
     >>> freqs2 = get_path_stats(root2)
     >>> freqs2[0]['path']
-    'div/a'
+    'html/body/div/a'
     >>> freqs2[1]['links']
     ['/a', '/b']
     """
@@ -110,19 +110,19 @@ def _extract_node_data(
     """
     Extracts text content and hyperlink references from an HTML element.
 
-    >>> node = html.fromstring("<p>Hello</p>")
+    >>> node = html.document_fromstring("<p>Hello</p>")
     >>> _extract_node_data(node)
     ('Hello', [])
 
-    >>> node2 = html.fromstring('<div>Text <a href="/link">here</a></div>')
+    >>> node2 = html.document_fromstring('<div>Text <a href="/link">here</a></div>')
     >>> _extract_node_data(node2)
     ('Text here', ['/link'])
 
-    >>> node3 = html.fromstring('<a href="/click">Click me</a>')
+    >>> node3 = html.document_fromstring('<a href="/click">Click me</a>')
     >>> _extract_node_data(node3)
     ('Click me', ['/click'])
 
-    >>> node4 = html.fromstring("<div></div>")
+    >>> node4 = html.document_fromstring("<div></div>")
     >>> _extract_node_data(node4)
     ('', [])
     """
@@ -140,8 +140,8 @@ def get_content_for_path(
     Returns the complete text and links for the first `limit` items
     at the specified PATH in ROOT.
 
-    >>> root = html.fromstring('<div><span>One <a href="/a">A</a></span><span>Two</span><span>Three</span></div>')
-    >>> details = get_content_for_path(root, 'div/span', limit=2)
+    >>> root = html.document_fromstring('<div><span>One <a href="/a">A</a></span><span>Two</span><span>Three</span></div>')
+    >>> details = get_content_for_path(root, 'html/body/div/span', limit=2)
     >>> len(details)
     2
     >>> details[0]['text']
@@ -153,30 +153,39 @@ def get_content_for_path(
     >>> details[1]['links']
     []
 
-    >>> details_all = get_content_for_path(root, 'div/span', limit=None)
+    >>> details_all = get_content_for_path(root, 'html/body/div/span', limit=None)
     >>> len(details_all)
     3
     >>> details_all[2]['text']
     'Three'
 
-    >>> root2 = html.fromstring('<div><div><p>1</p><p>2</p></div></div>')
-    >>> details2 = get_content_for_path(root2, 'div')
+    >>> root2 = html.document_fromstring('<div><div><p>1</p><p>2</p></div></div>')
+    >>> details2 = get_content_for_path(root2, 'html/body/div')
     >>> len(details2)
     1
     >>> details2[0]['text']
     '12'
 
-    >>> root3 = html.fromstring('<div></div>')
+    >>> root3 = html.document_fromstring('<div></div>')
     >>> details3 = get_content_for_path(root3, 'div')
     >>> len(details3)
     0
 
+    >>> root4 = html.document_fromstring('<div><div></div><div>1</div></div>')
+    >>> details4 = get_content_for_path(root4, 'html/body/div/div', limit = 1)
+    >>> len(details4)
+    1
+
     """
-    nodes = root.xpath(f"/html/body/{path}")
+    nodes = root.xpath(f"/{path}")
     results = []
-    for node in nodes[:limit]:
+    i = 0
+    for node in nodes:
         raw, links = _extract_node_data(node)
-        # Only include nodes that have text if limit isn't specified
-        if limit is not None or raw:
+        # Only include nodes that have text up to limit if specified
+        if raw:
             results.append(PathElementDetails(text=raw, links=links))
+            i += 1
+        if limit is not None and i == limit:
+            break
     return results

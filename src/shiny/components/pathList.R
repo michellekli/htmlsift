@@ -21,7 +21,8 @@ ui <- function(id) {
   card(card_header("Select a path"), card_body(
     tooltip(
       DT::dataTableOutput(ns("dt")),
-      "Click a row to preview content at that path."
+      "Click a row to preview content at that path.",
+      placement = "top"
     )
   ))
 }
@@ -72,12 +73,13 @@ server <- function(id, paths, selected_path) {
         selection = list(mode = "single", target = "row"),
         options = list(
           fillContainer = TRUE,
+          # Must have pagination, otherwise if too many rows entire UI breaks
           paging = TRUE,
           pageLength = 12,
           # Turn off searching because it doesn't search through all values
           searching = FALSE,
           ordering = FALSE,
-          info = TRUE,
+          info = FALSE,
           columnDefs = list(
             list(className = "dt-right", targets = 0),
             list(className = "dt-left", targets = 1),
