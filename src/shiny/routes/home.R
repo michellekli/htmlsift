@@ -13,8 +13,8 @@ box::use(
   ../config[import_python],
   ../components/htmlInput,
   ../components/pathList,
-  ../components/extractionZone,
-  pathPreviewModal = ../components/pathPreview/modal
+  ../components/extractionModal,
+  pathPreviewZone = ../components/pathPreview/zone
 )
 
 parser <- import_python("parser")
@@ -32,7 +32,7 @@ ui <- function() {
     ),
     layout_columns(
       pathList$ui("path_list"),
-      extractionZone$ui("extraction_zone"),
+      pathPreviewZone$ui("path_preview_zone"),
       col_widths = c(5, 7)
     )
   )
@@ -78,13 +78,13 @@ server <- function(input, output, session) {
   pathList$server("path_list",
                   paths = parsed_paths,
                   selected_path = selected_path)
-  pathPreviewModal$server("path_preview_modal",
-                          selected_path,
-                          parsed_tree_root,
-                          extraction_path)
-  extractionZone$server("extraction_zone",
-                        extraction_path,
-                        parsed_tree_root)
+  pathPreviewZone$server("path_preview_zone",
+                         selected_path,
+                         parsed_tree_root,
+                         extraction_path)
+  extractionModal$server("extraction_modal",
+                         extraction_path,
+                         parsed_tree_root)
 
   # ----------------------
   # --- EVENT HANDLING ---
@@ -125,12 +125,12 @@ server <- function(input, output, session) {
     })
   })
 
-  # Handle change in selected_path
-  observeEvent(selected_path(), {
-    path <- selected_path()
+  # Handle change in extraction_path
+  observeEvent(extraction_path(), {
+    path <- extraction_path()
     req(!is.null(path), nchar(path) > 0)
 
-    log_info("Path selected: {path}")
-    showModal(pathPreviewModal$ui("path_preview_modal"))
+    log_info("Path to extract: {path}")
+    showModal(extractionModal$ui("extraction_modal"))
   })
 }

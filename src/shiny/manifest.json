@@ -1817,20 +1817,17 @@
     "app.R": {
       "checksum": "4336249c2978f9cccf24720357b1459b"
     },
-    "components/extractionZone.R": {
-      "checksum": "b4b524eeb1a101df6dea243c7a07f3c5"
+    "components/extractionModal.R": {
+      "checksum": "2f8f129f9b78ee944928d7abc722702e"
     },
     "components/htmlInput.R": {
       "checksum": "d0d86338f01a2d9e083d8f301e073307"
     },
     "components/pathList.R": {
-      "checksum": "90b1cf5823bf94ea65fc9dd7ebab8bb8"
+      "checksum": "dd49d972652568bf030cd780dcc593ca"
     },
     "components/pathPreview/linksTable.R": {
       "checksum": "25b4a627bee7669a5f386950848a234d"
-    },
-    "components/pathPreview/modal.R": {
-      "checksum": "d45a6b80dceb3e3e44a545a5e8a99f67"
     },
     "components/pathPreview/pathDisplay.R": {
       "checksum": "cc5ff54f42eef4424e74345120270fde"
@@ -1838,17 +1835,20 @@
     "components/pathPreview/previewAccordion.R": {
       "checksum": "ce4a4a36ea3f96fbb6c6e669bed035bd"
     },
+    "components/pathPreview/zone.R": {
+      "checksum": "0a71d1ffdbf64e12ba5e90e143c9ff8d"
+    },
     "config.R": {
       "checksum": "719fb3c7d016e1a3ed8c2fd8c2d143be"
     },
     "logger.R": {
-      "checksum": "e415d8f2df4e9e1d60ed0bfe603542c8"
+      "checksum": "a1130319590861e78b812c3e336faef6"
     },
     "requirements.txt": {
       "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
-      "checksum": "6b1c52110a34127bf718c59f6a65bf46"
+      "checksum": "70bac3787685a4149f59d5d6709b55bd"
     }
   },
   "users": null
