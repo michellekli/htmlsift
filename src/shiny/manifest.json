@@ -1778,17 +1778,20 @@
     "app.R": {
       "checksum": "949b48b50864e8dc112a3ef178f167b8"
     },
+    "components/extractionZone.R": {
+      "checksum": "b22a7d128806e05dd5d4b712e89ef3ee"
+    },
     "components/htmlInput.R": {
       "checksum": "7babb937688bfe45ef5eaeee800b046a"
     },
     "components/pathList.R": {
-      "checksum": "cb4b76055e0df8bfcf624b912d38fc67"
+      "checksum": "4e859d6b383aed954ed0bb1337204bf8"
     },
     "components/pathPreview/linksTable.R": {
       "checksum": "621e2d615eadb660403b7acfeb3a687a"
     },
     "components/pathPreview/modal.R": {
-      "checksum": "f1130f4eeeceb42afe12b37b1baea106"
+      "checksum": "a6e3c21058bc4104eeca71aa1d706606"
     },
     "components/pathPreview/pathDisplay.R": {
       "checksum": "cc5ff54f42eef4424e74345120270fde"
@@ -1803,7 +1806,7 @@
       "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
-      "checksum": "5ee6623951ea7d146db2bbd40bbd681b"
+      "checksum": "a5d218391425f2a0c07feb3c82822893"
     }
   },
   "users": null

@@ -68,7 +68,8 @@ server <- function(id, paths, selected_path) {
         options = list(
           fillContainer = TRUE,
           paging = FALSE,
-          searching = TRUE,
+          # Turn off searching because it doesn't search through all values
+          searching = FALSE,
           ordering = FALSE,
           info = TRUE,
           columnDefs = list(
