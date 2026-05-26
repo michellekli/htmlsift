@@ -1,5 +1,63 @@
-from lxml import html, etree
+from lxml import html
+import re
 from typing import List, TypedDict
+
+# HTML block-level elements
+# Separate text with newlines at each block level element.
+# All other elements are concatenated without a separator.
+# Selected from list at https://www.w3schools.com/tAGS/default.asp
+BLOCK_TAGS = {
+    "address",
+    "article",
+    "aside",
+    "blockquote",
+    "body",
+    "br",
+    "caption",
+    "dd",
+    "details",
+    "dialog",
+    "div",
+    "dl",
+    "dt",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "footer",
+    "form",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "header",
+    "hgroup",
+    "hr",
+    "html",
+    "label",
+    "legend",
+    "li",
+    "main",
+    "menu",
+    "nav",
+    "ol",
+    "optgroup",
+    "option",
+    "p",
+    "pre",
+    "section",
+    "select",
+    "summary",
+    "table",
+    "tbody",
+    "td",
+    "tfoot",
+    "th",
+    "thead",
+    "tr",
+    "ul",
+}
 
 
 class PathData(TypedDict):
@@ -104,10 +162,60 @@ def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
     return result
 
 
+def _extract_text(node: html.HtmlElement) -> str:
+    r"""
+    Extracts text content from an HTML element, inserting newlines at
+    block-level elements.
+
+    >>> _extract_text(html.document_fromstring("<div></div>"))
+    '\n'
+
+    >>> _extract_text(html.document_fromstring("<span>A <b>bold</b> span</span>"))
+    '\nA bold span'
+
+    >>> _extract_text(html.document_fromstring("<div><p>First</p><p>Second</p></div>"))
+    '\nFirst\nSecond'
+
+    >>> _extract_text(html.document_fromstring("<form><label>Username</label><input><label>Password</label><input></form>"))
+    '\nUsername\nPassword'
+
+    >>> _extract_text(html.document_fromstring("<label>Options</label><select><option>A</option><option>B</option></select>"))
+    '\nOptions\nA\nB'
+
+    >>> _extract_text(html.document_fromstring("<label>Options</label><select><optgroup><option>One</option></optgroup><optgroup><option>Two</option></optgroup></select>"))
+    '\nOptions\nOne\nTwo'
+
+    >>> _extract_text(html.document_fromstring("<select><option>A</option></select><select><option>B</option></select>"))
+    '\nA\nB'
+
+    >>> _extract_text(html.document_fromstring("<div>Hello <p>World<p>!</div>"))
+    '\nHello \nWorld\n!'
+
+    >>> _extract_text(html.document_fromstring("<div>Hello <p>World<p>!</div><div>From Python</div>"))
+    '\nHello \nWorld\n!\nFrom Python'
+
+    >>> _extract_text(html.document_fromstring("<div>Hello <p>World<p>!</div><div>From<br>Python</div>"))
+    '\nHello \nWorld\n!\nFrom\nPython'
+    """
+    parts: list[str] = []
+    if node.text:
+        parts.append(node.text)
+    for child in node:
+        child_text = _extract_text(child)
+        if child.tag in BLOCK_TAGS:
+            parts.append("\n")
+        parts.append(child_text)
+        if child.tail:
+            parts.append(child.tail)
+    parts_string = "".join(parts)
+    # squish consecutive newlines into one newline
+    return re.sub(r"\n+", "\n", parts_string)
+
+
 def _extract_node_data(
     node: html.HtmlElement,
 ) -> tuple[str, list[str]]:
-    """
+    r"""
     Extracts text content and hyperlink references from an HTML element.
 
     >>> node = html.document_fromstring("<p>Hello</p>")
@@ -125,8 +233,13 @@ def _extract_node_data(
     >>> node4 = html.document_fromstring("<div></div>")
     >>> _extract_node_data(node4)
     ('', [])
+
+    >>> node5 = html.document_fromstring("<div><p>1</p><p>2</p></div>")
+    >>> _extract_node_data(node5)
+    ('1\n2', [])
+
     """
-    raw = etree.tostring(node, method="text", encoding="unicode").strip()
+    raw = _extract_text(node).strip()
     links: list[str] = node.xpath(".//a/@href")
     if node.tag == "a" and "href" in node.attrib:
         links.append(node.attrib["href"])
@@ -136,7 +249,7 @@ def _extract_node_data(
 def get_content_for_path(
     root: html.HtmlElement, path: str, limit: int | None = None
 ) -> List[PathElementDetails]:
-    """
+    r"""
     Returns the complete text and links for the first `limit` items
     at the specified PATH in ROOT.
 
@@ -164,7 +277,7 @@ def get_content_for_path(
     >>> len(details2)
     1
     >>> details2[0]['text']
-    '12'
+    '1\n2'
 
     >>> root3 = html.document_fromstring('<div></div>')
     >>> details3 = get_content_for_path(root3, 'div')
