@@ -13,6 +13,13 @@ box::use(
   shiny[shinyApp],
 )
 
+box::use(
+  ./logger,
+)
+
+# Initialize logging
+logger$init()
+
 # Load initial route
 box::use(
   routes/home

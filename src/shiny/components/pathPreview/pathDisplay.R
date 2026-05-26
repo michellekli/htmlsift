@@ -5,6 +5,10 @@ box::use(
   shiny[...],
 )
 
+#' Path display module UI
+#'
+#' @param id Module namespace identifier.
+#' @return A styled div showing the selected path text.
 #' @export
 ui <- function(id) {
   ns <- NS(id)
@@ -16,6 +20,12 @@ ui <- function(id) {
   )
 }
 
+#' Path display module server
+#'
+#' Updates the displayed path text when selected_path changes.
+#'
+#' @param id Module namespace identifier.
+#' @param selected_path A reactiveVal containing the path string to display.
 #' @export
 server <- function(id, selected_path) {
   moduleServer(id, function(input, output, session) {
@@ -25,20 +35,16 @@ server <- function(id, selected_path) {
     # --- REACTIVE STATE ---
     # ----------------------
 
+    # No state
+
     # ----------------------
     # --- EVENT HANDLING ---
     # ----------------------
 
     # Handle change in selected_path
-    observeEvent(selected_path(), {
-      req(selected_path())
-
-      isolate({
-        output$path_text <- renderText({
-          selected_path()
-        })
-      })
-    })
-
+    output$path_text <- renderText({
+      validate(need(selected_path(), "No path selected."))
+      selected_path()
+    }) |> bindEvent(selected_path())
   })
 }

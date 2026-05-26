@@ -44,8 +44,8 @@ def get_path_stats(root: html.HtmlElement) -> List[PathFrequency]:
     Traverses the tree and returns root-to-node paths with occurrence
     frequencies, sorted descending by frequency.
     Paths include all tags from root to each node, e.g. 'html/body/div/p'.
-    These paths can be used with root.xpath() by prefixing '//',
-    e.g. root.xpath(f"//{entry['path']}").
+    These paths can be used with root.xpath() by prefixing '/',
+    e.g. root.xpath(f"/{entry['path']}").
     Each entry also includes the first text content found at that path,
     extracted recursively from the node, stripped, and truncated to 100 chars,
     and an array of hyperlink references found in the subtree.
@@ -158,10 +158,25 @@ def get_content_for_path(
     3
     >>> details_all[2]['text']
     'Three'
+
+    >>> root2 = html.fromstring('<div><div><p>1</p><p>2</p></div></div>')
+    >>> details2 = get_content_for_path(root2, 'div')
+    >>> len(details2)
+    1
+    >>> details2[0]['text']
+    '12'
+
+    >>> root3 = html.fromstring('<div></div>')
+    >>> details3 = get_content_for_path(root3, 'div')
+    >>> len(details3)
+    0
+
     """
-    nodes = root.xpath(f"//{path}")
+    nodes = root.xpath(f"/html/body/{path}")
     results = []
     for node in nodes[:limit]:
         raw, links = _extract_node_data(node)
-        results.append(PathElementDetails(text=raw, links=links))
+        # Only include nodes that have text if limit isn't specified
+        if limit is not None or raw:
+            results.append(PathElementDetails(text=raw, links=links))
     return results
