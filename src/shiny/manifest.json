@@ -1103,6 +1103,45 @@
         "RemoteSha": "1.0.5"
       }
     },
+    "logger": {
+      "Source": "CRAN",
+      "Repository": "https://cloud.r-project.org",
+      "description": {
+        "Type": "Package",
+        "Package": "logger",
+        "Title": "A Lightweight, Modern and Flexible Logging Utility",
+        "Version": "0.4.2",
+        "Date": "2026-05-08",
+        "Authors@R": "c(\n    person(\"Gergely\", \"Daróczi\", , \"daroczig@rapporter.net\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0003-3149-8537\")),\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = \"aut\",\n           comment = c(ORCID = \"0000-0003-4757-117X\")),\n    person(\"Jonathan\", \"Carroll\", , \"rpkg@jcarroll.com.au\", role = \"ctb\", \n           comment = c(ORCID = \"0000-0002-1404-5264\")),       \n    person(\"Spare Cores\", role = \"fnd\"),\n    person(\"System1\", role = \"fnd\")\n  )",
+        "Description": "Inspired by the the 'futile.logger' R package and 'logging'\n    Python module, this utility provides a flexible and extensible way of\n    formatting and delivering log messages with low overhead.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://daroczig.github.io/logger/",
+        "BugReports": "https://github.com/daroczig/logger/issues",
+        "Depends": "R (>= 4.0.0)",
+        "Imports": "utils",
+        "Suggests": "botor, cli, covr, crayon, devtools, glue, jsonlite, knitr,\nmirai (>= 1.3.0), ntfy, pander, parallel, R.utils, rmarkdown,\nroxygen2, RPushbullet, rsyslog, shiny, slackr (>= 1.4.1),\nsyslognet, telegram, testthat (>= 3.0.0), withr",
+        "Enhances": "futile.logger, log4r, logging",
+        "VignetteBuilder": "knitr",
+        "Config/testthat/edition": "3",
+        "Config/testthat/parallel": "TRUE",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2026-05-08 20:57:17 UTC; daroczig",
+        "Author": "Gergely Daróczi [aut, cre] (ORCID:\n    <https://orcid.org/0000-0003-3149-8537>),\n  Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>),\n  Jonathan Carroll [ctb] (ORCID: <https://orcid.org/0000-0002-1404-5264>),\n  Spare Cores [fnd],\n  System1 [fnd]",
+        "Maintainer": "Gergely Daróczi <daroczig@rapporter.net>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-05-10 05:10:27 UTC",
+        "Built": "R 4.6.0; ; 2026-05-26 01:03:57 UTC; unix",
+        "RemoteType": "standard",
+        "RemoteRef": "logger",
+        "RemotePkgRef": "logger",
+        "RemoteRepos": "https://cloud.r-project.org",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "source",
+        "RemoteSha": "0.4.2"
+      }
+    },
     "magrittr": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -1776,37 +1815,40 @@
   },
   "files": {
     "app.R": {
-      "checksum": "949b48b50864e8dc112a3ef178f167b8"
+      "checksum": "4336249c2978f9cccf24720357b1459b"
     },
     "components/extractionZone.R": {
-      "checksum": "b22a7d128806e05dd5d4b712e89ef3ee"
+      "checksum": "b4b524eeb1a101df6dea243c7a07f3c5"
     },
     "components/htmlInput.R": {
-      "checksum": "7babb937688bfe45ef5eaeee800b046a"
+      "checksum": "d0d86338f01a2d9e083d8f301e073307"
     },
     "components/pathList.R": {
-      "checksum": "4e859d6b383aed954ed0bb1337204bf8"
+      "checksum": "90b1cf5823bf94ea65fc9dd7ebab8bb8"
     },
     "components/pathPreview/linksTable.R": {
-      "checksum": "621e2d615eadb660403b7acfeb3a687a"
+      "checksum": "25b4a627bee7669a5f386950848a234d"
     },
     "components/pathPreview/modal.R": {
-      "checksum": "a6e3c21058bc4104eeca71aa1d706606"
+      "checksum": "d45a6b80dceb3e3e44a545a5e8a99f67"
     },
     "components/pathPreview/pathDisplay.R": {
       "checksum": "cc5ff54f42eef4424e74345120270fde"
     },
     "components/pathPreview/previewAccordion.R": {
-      "checksum": "13847b737da2dfaf046e5ced18b0ecb3"
+      "checksum": "ce4a4a36ea3f96fbb6c6e669bed035bd"
     },
     "config.R": {
-      "checksum": "6ffe787f87d8afee7c96ec45e0ca1444"
+      "checksum": "719fb3c7d016e1a3ed8c2fd8c2d143be"
+    },
+    "logger.R": {
+      "checksum": "e415d8f2df4e9e1d60ed0bfe603542c8"
     },
     "requirements.txt": {
       "checksum": "c7c7f803f0d19352c5d839e223835618"
     },
     "routes/home.R": {
-      "checksum": "a5d218391425f2a0c07feb3c82822893"
+      "checksum": "6b1c52110a34127bf718c59f6a65bf46"
     }
   },
   "users": null

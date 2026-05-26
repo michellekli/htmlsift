@@ -7,6 +7,10 @@ box::use(
 )
 
 box::use(
+  logger[log_info],
+)
+
+box::use(
   ./linksTable
 )
 
@@ -72,6 +76,8 @@ server <- function(id, preview_data) {
       # Update state with details for each module
       links_modules(module_detail)
 
+      log_info("Rendering preview accordion with {length(data)} items")
+
       # Create accordion panels for each preview item
       panels <- lapply(seq_along(data), function(i) {
         item <- data[[i]]
@@ -116,6 +122,8 @@ server <- function(id, preview_data) {
     observeEvent(n_servers_to_init(), {
       n <- n_servers_to_init()
       req(n > 0)
+
+      log_info("Initializing {n} linksTable module servers")
 
       lapply(c(1:n), function(i) {
         linksTable$server(

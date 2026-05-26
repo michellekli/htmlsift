@@ -6,6 +6,10 @@ box::use(
 )
 
 box::use(
+  logger[log_info, log_warn, log_error],
+)
+
+box::use(
   ../config[import_python],
   ../components/htmlInput,
   ../components/pathList,
@@ -13,12 +17,7 @@ box::use(
   pathPreviewModal = ../components/pathPreview/modal
 )
 
-parser <- tryCatch(
-  import_python("parser"),
-  error = function(e) {
-    stop("Unable to import Python parser module: ", e$message)
-  }
-)
+parser <- import_python("parser")
 
 #' Main application UI
 #'
@@ -95,6 +94,7 @@ server <- function(input, output, session) {
     # Clear state for saved HTML values
     clear_html_derivatives()
 
+    log_info("Parsing sanitized HTML...")
     tryCatch({
       withProgress(
         message = "Parsing HTML...",
@@ -111,9 +111,12 @@ server <- function(input, output, session) {
             do.call(rbind, args = _) |>
             data.frame() |>
             parsed_paths()
+
+          log_info("HTML parsed successfully")
         }
       )
     }, error = function(e) {
+      log_error("Unable to parse HTML: {e$message}")
       showNotification(
         paste("Unable to parse HTML:", e$message),
         type = "error",
@@ -127,14 +130,7 @@ server <- function(input, output, session) {
     path <- selected_path()
     req(!is.null(path), nchar(path) > 0)
 
+    log_info("Path selected: {path}")
     showModal(pathPreviewModal$ui("path_preview_modal"))
   })
-
-  # Handle change in extraction_path
-  # Display extraction path for demonstration
-  output$selected_output <- renderPrint({
-    validate(need(extraction_path(), "No path selected for extraction"))
-    cat("Extraction path:\n")
-    cat(extraction_path())
-  }) |> bindEvent(extraction_path())
 }
