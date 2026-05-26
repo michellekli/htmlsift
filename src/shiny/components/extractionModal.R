@@ -169,7 +169,7 @@ server <- function(id, extraction_path, parsed_tree_root) {
           formatted_data(NULL)
         })
       } else if (format == "CSV") {
-        # Collapse link vectors into semicolon-separated strings
+        # Collapse link vectors into single string
         log_info("Formatting extracted data as CSV")
         tryCatch({
           withProgress(
@@ -179,7 +179,7 @@ server <- function(id, extraction_path, parsed_tree_root) {
               csv_data <- as.data.frame(do.call(rbind, data))
               csv_data$text <- unlist(csv_data$text)
               csv_data$links <- sapply(csv_data$links, function(x) {
-                paste(unlist(x), collapse = "; ")
+                paste(unlist(x), collapse = " | ")
               })
               formatted_data(
                 utils::capture.output(
