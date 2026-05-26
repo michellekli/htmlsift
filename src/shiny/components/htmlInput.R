@@ -1,20 +1,12 @@
 # HTML input module: provides text area, sanitization, and validation
 
-box::use(
-  bslib[...],
-  shiny[...],
-)
+box::use(bslib[...], shiny[...], )
 
-box::use(
-  ../config[import_python],
-)
+box::use(logger[log_info, log_error], )
 
-sanitizer <- tryCatch(
-  import_python("sanitizer"),
-  error = function(e) {
-    stop("Unable to import Python sanitizer module: ", e$message)
-  }
-)
+box::use(../config[import_python], )
+
+sanitizer <- import_python("sanitizer")
 
 #' HTML input module UI
 #'
@@ -24,32 +16,31 @@ sanitizer <- tryCatch(
 ui <- function(id) {
   ns <- NS(id)
 
-  card(
-    card_header("Config"),
-    card_body(
-      tooltip(
-        textAreaInput(
-          inputId = ns("html_input"),
-          label = "Paste your HTML below:",
-          placeholder = "HTML here...",
-          rows = 12,
-          width = "100%"
-        ),
-        "Paste raw HTML to parse. Will be sanitized to remove unsafe content."
-      ),
-      tooltip(
-        actionButton(
-          inputId = ns("process_html"),
-          label = "Process HTML",
-          icon = icon("play"),
-          class = "btn-primary w-100 mt-2"
-        ),
-        "Sanitize and parse the HTML to extract content paths."
-      ),
-      # Display validation/status messages
-      uiOutput(ns("status_message"))
-    )
-  )
+  card(card_header("Config"),
+       card_body(
+         tooltip(
+           textAreaInput(
+             inputId = ns("html_input"),
+             label = "Paste your HTML below:",
+             placeholder = "HTML here...",
+             rows = 12,
+             width = "100%"
+           ),
+           "Paste raw HTML to parse.
+           Will be sanitized to remove unsafe content."
+         ),
+         tooltip(
+           actionButton(
+             inputId = ns("process_html"),
+             label = "Process HTML",
+             icon = icon("play"),
+             class = "btn-primary w-100 mt-2"
+           ),
+           "Sanitize and parse the HTML to extract content paths."
+         ),
+         # Display validation/status messages
+         uiOutput(ns("status_message"))
+       ))
 }
 
 #' HTML input module server
@@ -84,42 +75,37 @@ server <- function(id, sanitized_html) {
       sanitized_html(NULL)
 
       raw_html <- input$html_input
+      log_info("Processing HTML input ({nchar(raw_html)} chars)")
 
       # Sanitize and validate the HTML input
-      result <- withProgress(
-        message = "Processing HTML...",
-        value = 0.5,
-        {
-          tryCatch({
-            # Sanitize
-            cleaned <- sanitizer$sanitize_html(raw_html)
+      tryCatch({
+        withProgress(message = "Processing HTML...", value = 0.5, {
+          # Sanitize
+          cleaned <- sanitizer$sanitize_html(raw_html)
 
-            # Validation: Check if input is not empty or just whitespace
-            validate(
-              need(cleaned != "", "Please enter HTML content."),
-              need(nchar(trimws(cleaned)) > 0,
-                   "HTML content cannot be empty or whitespace only.")
+          # Validation: Check if input is not empty or just whitespace
+          validate(
+            need(cleaned != "", "Please enter HTML content."),
+            need(
+              nchar(trimws(cleaned)) > 0,
+              "HTML content cannot be empty or whitespace only."
             )
+          )
 
-            # Set state of input HTML
-            sanitized_html(cleaned)
+          # Set state of input HTML
+          sanitized_html(cleaned)
 
-            # Success message
-            list(
-              status = "success",
-              message = "HTML received!"
-            )
-          }, error = function(e) {
-            list(
-              status = "error",
-              message = e$message
-            )
-          })
-        }
-      )
+          log_info("HTML sanitized successfully ({nchar(cleaned)} chars)")
 
-      # Set state of status
-      process_html_status(result)
+          # Set state of status
+          process_html_status(list(status = "success",
+                                   message = "HTML received!"))
+        })
+      }, error = function(e) {
+        log_error("HTML sanitization failed: {e$message}")
+        # Set state of status
+        process_html_status(list(status = "error", message = e$message))
+      })
     })
 
     # Handle processing status change
@@ -134,19 +120,20 @@ server <- function(id, sanitized_html) {
         div(
           class = "alert alert-info mt-3",
           icon("spinner", class = "fa-spin"),
-          tags$strong(" Processing: "), result$message
+          tags$strong(" Processing: "),
+          result$message
         )
       } else if (result$status == "success") {
-        div(
-          class = "alert alert-success mt-3",
-          icon("check-circle"),
-          tags$strong(" Success: "), result$message
-        )
+        div(class = "alert alert-success mt-3",
+            icon("check-circle"),
+            tags$strong(" Success: "),
+            result$message)
       } else {
         div(
           class = "alert alert-danger mt-3",
           icon("exclamation-triangle"),
-          tags$strong(" Unable to process: "), result$message
+          tags$strong(" Unable to process: "),
+          result$message
         )
       }
     }) |> bindEvent(process_html_status())

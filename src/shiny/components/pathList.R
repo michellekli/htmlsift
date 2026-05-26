@@ -6,6 +6,10 @@ box::use(
   DT,
 )
 
+box::use(
+  logger[log_info],
+)
+
 #' Path list module UI
 #'
 #' @param id Module namespace identifier.
@@ -59,6 +63,7 @@ server <- function(id, paths, selected_path) {
         )
       )
       df <- paths()[, c("frequency", "path", "first_text")]
+      log_info("Rendering path table with {nrow(df)} rows")
 
       # Render the data table with single-row selection
       DT::datatable(
@@ -67,7 +72,8 @@ server <- function(id, paths, selected_path) {
         selection = list(mode = "single", target = "row"),
         options = list(
           fillContainer = TRUE,
-          paging = FALSE,
+          paging = TRUE,
+          pageLength = 12,
           # Turn off searching because it doesn't search through all values
           searching = FALSE,
           ordering = FALSE,
@@ -105,6 +111,7 @@ server <- function(id, paths, selected_path) {
       selected_row <- input$dt_rows_selected
       path_string <- paths()[["path"]][[selected_row]]
 
+      log_info("Path selected: {path_string}")
       # Set state of selected_path
       selected_path(path_string)
     })

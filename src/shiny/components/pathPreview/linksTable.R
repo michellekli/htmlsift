@@ -5,6 +5,10 @@ box::use(
   DT,
 )
 
+box::use(
+  logger[log_info, log_error],
+)
+
 #' Links table module UI
 #'
 #' @param id Module namespace identifier.
@@ -42,6 +46,7 @@ server <- function(id, links_reactive) {
       links <- links_reactive()
 
       if (length(links) > 0) {
+        log_info("Rendering links table with {length(links)} links")
         DT::DTOutput(ns("links_dt"))
       } else {
         div(
@@ -80,6 +85,7 @@ server <- function(id, links_reactive) {
           selection = "none"
         )
       }, error = function(e) {
+        log_error("Links table rendering failed: {e$message}")
         DT::datatable(
           data.frame(href = paste("Unable to load links:", e$message)),
           options = list(

@@ -6,17 +6,16 @@ box::use(
 )
 
 box::use(
+  logger[log_info, log_error],
+)
+
+box::use(
   ../../config[import_python],
   ./pathDisplay,
   ./previewAccordion
 )
 
-parser <- tryCatch(
-  import_python("parser"),
-  error = function(e) {
-    stop("Unable to import Python parser module: ", e$message)
-  }
-)
+parser <- import_python("parser")
 
 #' Path preview modal UI
 #'
@@ -100,6 +99,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
       path <- selected_path()
       root <- parsed_tree_root()
 
+      log_info("Loading preview for path: {path}")
       tryCatch({
         withProgress(
           message = "Loading preview...",
@@ -111,7 +111,9 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
                                                      limit = as.integer(3)))
           }
         )
+        log_info("Preview loaded for path: {path}")
       }, error = function(e) {
+        log_error("Preview failed for path '{path}': {e$message}")
         showNotification(
           paste("Unable to get content for preview:", e$message),
           type = "error"
@@ -122,6 +124,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
 
     # Handle Confirm button click
     observeEvent(input$confirm, {
+      log_info("Extraction confirmed for path: {selected_path()}")
       # Update state with path for extraction
       extraction_path(selected_path())
 
@@ -134,6 +137,7 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
 
     # Handle Cancel button click
     observeEvent(input$cancel, {
+      log_info("Extraction cancelled for path: {selected_path()}")
       # Clear state for selected path
       selected_path(NULL)
 

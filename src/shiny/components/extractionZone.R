@@ -8,15 +8,14 @@ box::use(
 )
 
 box::use(
+  logger[log_info, log_error],
+)
+
+box::use(
   ../config[import_python],
 )
 
-parser <- tryCatch(
-  import_python("parser"),
-  error = function(e) {
-    stop("Unable to import Python parser module: ", e$message)
-  }
-)
+parser <- import_python("parser")
 
 #' Extraction Zone UI
 #'
@@ -120,13 +119,16 @@ server <- function(id, extraction_path, parsed_tree_root) {
       path <- extraction_path()
       root <- parsed_tree_root()
 
+      log_info("Extracting content for path: {path}")
       tryCatch({
         withProgress(
           message = "Extracting data...",
           value = 0.5,
           all_extracted_data(parser$get_content_for_path(root, path))
         )
+        log_info("Extraction completed for path: {path}")
       }, error = function(e) {
+        log_error("Extraction failed for path '{path}': {e$message}")
         showNotification(
           paste("Unable to extract content:", e$message),
           type = "error"
@@ -147,19 +149,27 @@ server <- function(id, extraction_path, parsed_tree_root) {
         # Convert links column (list of character vectors) to
         # proper JSON structure
         # For JSON, we keep links as arrays
+        log_info("Formatting extracted data as JSON")
         tryCatch({
-          withProgress(message = "Formatting JSON...",
-                       value = 0.5,
-                       formatted_data(jsonlite::toJSON(
-                         data, pretty = TRUE, auto_unbox = FALSE
-                       )))
+          withProgress(
+            message = "Formatting JSON...",
+            value = 0.5,
+            formatted_data(jsonlite::toJSON(data,
+                                            pretty = TRUE,
+                                            auto_unbox = FALSE))
+          )
+          log_info("Formatting JSON complete")
         }, error = function(e) {
-          showNotification(paste("Unable to format data as JSON:", e$message),
-                           type = "error")
+          log_error("JSON formatting failed: {e$message}")
+          showNotification(
+            paste("Unable to format data as JSON:", e$message),
+            type = "error"
+          )
           formatted_data(NULL)
         })
       } else if (format == "CSV") {
         # Collapse link vectors into semicolon-separated strings
+        log_info("Formatting extracted data as CSV")
         tryCatch({
           withProgress(
             message = "Formatting CSV...",
@@ -177,7 +187,9 @@ server <- function(id, extraction_path, parsed_tree_root) {
               )
             }
           )
+          log_info("Formatting CSV complete")
         }, error = function(e) {
+          log_error("CSV formatting failed: {e$message}")
           showNotification(
             paste("Unable to format data as CSV:", e$message),
             type = "error"
@@ -212,6 +224,7 @@ server <- function(id, extraction_path, parsed_tree_root) {
         req(formatted_data())
         data <- formatted_data()
 
+        log_info("Downloading data as {input$format}")
         writeLines(data, file)
       },
       contentType = if (input$format == "JSON") {
