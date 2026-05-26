@@ -125,6 +125,9 @@ server <- function(id, selected_path, parsed_tree_root, extraction_path) {
       # Update state with path for extraction
       extraction_path(selected_path())
 
+      # Clear state for selected_path
+      selected_path(NULL)
+
       # Close modal
       removeModal()
     })

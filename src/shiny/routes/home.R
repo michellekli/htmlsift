@@ -9,6 +9,7 @@ box::use(
   ../config[import_python],
   ../components/htmlInput,
   ../components/pathList,
+  ../components/extractionZone,
   pathPreviewModal = ../components/pathPreview/modal
 )
 
@@ -32,12 +33,7 @@ ui <- function() {
     ),
     layout_columns(
       pathList$ui("path_list"),
-      card(
-        card_header("Selected Path"),
-        card_body(
-          verbatimTextOutput("selected_output")
-        )
-      ),
+      extractionZone$ui("extraction_zone"),
       col_widths = c(5, 7)
     )
   )
@@ -65,12 +61,15 @@ server <- function(input, output, session) {
   extraction_path <- reactiveVal(NULL)
 
   # Clean up reactive values when the session ends
-  session$onSessionEnded(function() {
-    sanitized_html(NULL)
+  clear_html_derivatives <- function() {
     parsed_tree_root(NULL)
     parsed_paths(NULL)
     selected_path(NULL)
     extraction_path(NULL)
+  }
+  session$onSessionEnded(function() {
+    sanitized_html(NULL)
+    clear_html_derivatives()
 
     gc()
   })
@@ -84,12 +83,18 @@ server <- function(input, output, session) {
                           selected_path,
                           parsed_tree_root,
                           extraction_path)
+  extractionZone$server("extraction_zone",
+                        extraction_path,
+                        parsed_tree_root)
 
   # ----------------------
   # --- EVENT HANDLING ---
   # ----------------------
   # Handle change in stored HTML
   observeEvent(sanitized_html(), {
+    # Clear state for saved HTML values
+    clear_html_derivatives()
+
     tryCatch({
       withProgress(
         message = "Parsing HTML...",
