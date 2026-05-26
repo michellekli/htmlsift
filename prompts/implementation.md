@@ -20,7 +20,7 @@ Turn this into a prompt for a Shiny Assistant.
 - Use modular NS() where applicable.
 - Use state to communicate between shiny modules. Do not return any values from a server module.
 - Separate server functions into a Reactive State section and an Event Handling section.
-- The Reactive State section initializes reactive values and passes state to server functions for communication. Prefer explicit reactive() or reactiveVal() instead of reactive().
+- The Reactive State section initializes reactive values and passes state to server functions for communication. Prefer explicit reactiveVal() or reactiveValues() instead of reactive().
 - The Event Handling section contains logic that runs when state changes. Prefer observeEvent to explicitly list triggers in eventExpr. If an output needs to be rendered, use bindEvent instead of observeEvent.
 
 ---
